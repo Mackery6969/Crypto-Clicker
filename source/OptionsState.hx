@@ -43,6 +43,11 @@ class OptionsState extends FlxState
 		if (background.y >= FlxG.height)
 			background.y = 0;
 
+		#if discord_rpc
+		// update discord rich presence
+		DiscordHandler.changePresence('Configuring Options\n$' + Util.FloatToString(PlayState.cookies) + '\nCash Per Click: ' + Util.FloatToString(PlayState.cookiesPerClick));
+		#end
+
 		// when r held for a second or so, reset the game
 		if (FlxG.keys.justPressed.R)
 		{

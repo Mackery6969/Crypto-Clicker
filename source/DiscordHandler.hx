@@ -1,6 +1,7 @@
 package;
 
 import Sys.sleep;
+import lime.app.Application;
 
 using StringTools;
 
@@ -10,6 +11,7 @@ import discord_rpc.DiscordRpc;
 
 class DiscordHandler
 {
+	static var isInitialized:Bool = false;
 	#if discord_rpc
 	public function new()
 	{
@@ -30,6 +32,16 @@ class DiscordHandler
 		}
 
 		DiscordRpc.shutdown();
+	}
+
+	public static function prepare()
+	{
+		if (!isInitialized)
+			initialize();
+
+		Application.current.window.onClose.add(function() {
+			if(isInitialized) shutdown();
+		});
 	}
 
 	public static function shutdown()
@@ -63,6 +75,7 @@ class DiscordHandler
 		{
 			new DiscordHandler();
 		});
+		isInitialized = true;
 		trace("Discord Client initialized");
 	}
 

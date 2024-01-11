@@ -79,7 +79,7 @@ class PlayState extends FlxState
 
 		#if discord_rpc
 		// update discord rpc
-		DiscordHandler.changePresence('Playing the game');
+		DiscordHandler.changePresence('Clicking Crypto\n$' + Util.FloatToString(cookies) + '\nCash Per Click: ' + Util.FloatToString(cookiesPerClick));
 		#end
 
 		if (ClientPrefs.music)

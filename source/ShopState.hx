@@ -53,8 +53,9 @@ class ShopState extends FlxState
 			background.y = 0;
 
 		#if discord_rpc
+		var cookie = PlayState.cookies; // what
 		// update discord rpc
-		DiscordHandler.changePresence('In the Shop');
+		DiscordHandler.changePresence('Shopping\n$' + Util.FloatToString(cookie) + '\nCash Per Click: ' + Util.FloatToString(PlayState.cookiesPerClick));
 		#end
 	}
 

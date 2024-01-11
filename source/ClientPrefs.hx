@@ -13,7 +13,8 @@ class ClientPrefs
 		"music",
 		"antialiasing",
 		"framerate",
-		"autoPause"
+		"autoPause",
+		"startedBefore"
 	];
 	public static var fullscreen:Bool = false;
 	public static var flashing:Bool = true;
@@ -22,6 +23,8 @@ class ClientPrefs
 	public static var antialiasing:Bool = true;
 	public static var framerate:Int = 60;
 	public static var autoPause:Bool = true;
+
+	public static var startedBefore:Bool = false;
 
 	public static function saveSettings()
 	{
