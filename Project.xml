@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://lime.software/project/1.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://lime.software/project/1.0.2 http://lime.software/xsd/project-1.0.2.xsd">
+<project>
 
 	<!-- _________________________ Application Settings _________________________ -->
 
@@ -29,7 +28,9 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value="export" />
+	<set name="BUILD_DIR" value="export/debug" if="debug" />
+	<set name="BUILD_DIR" value="export/release" unless="debug" />
+	<set name="BUILD_DIR" value="export/32bit" if="32bits" />
 	<source path="source" />
 	<assets path="assets" />
 
