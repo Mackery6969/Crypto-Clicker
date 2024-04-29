@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.util.FlxSave;
+import PlayState;
 
 class ClientPrefs
 {
@@ -29,9 +30,12 @@ class ClientPrefs
 	public static var autoPause:Bool = true;
 
 	// saved stuff (non option related)
-	public static var money:Float = 0;
-	public static var moneyPerSecond:Float = 0;
-	public static var moneyPerClick:Float = 0.25;
+	// stuff soon xD
+	static var data:Array<String> = [
+		"money",
+		"moneyPerSecond",
+		"moneyPerClick"
+	];
 
 	public static function saveSettings()
 	{
@@ -48,9 +52,9 @@ class ClientPrefs
 
 		var saveData:FlxSave = new FlxSave();
 		saveData.bind("game", "Crypto-Clicker-Save"); // saved here so it can be reset and leave the options untouched.
-		saveData.data.money = money;
-		saveData.data.moneyPerSecond = moneyPerSecond;
-		saveData.data.moneyPerClick = moneyPerClick;
+		saveData.data.money = PlayState.money;
+		saveData.data.moneyPerSecond = PlayState.moneyPerSecond;
+		saveData.data.moneyPerClick = PlayState.moneyPerClick;
 		saveData.flush();
 		saveData.destroy();
 	}
@@ -81,6 +85,13 @@ class ClientPrefs
 
 		FlxG.autoPause = autoPause;
 		FlxG.fullscreen = fullscreen;
+
+		FlxG.save.bind('game', 'Crypto-Clicker-Save');
+		if (FlxG.save.data.money != null) {
+			PlayState.money = FlxG.save.data.money;
+			PlayState.moneyPerSecond = FlxG.save.data.moneyPerSecond;
+			PlayState.moneyPerClick = FlxG.save.data.moneyPerClick;
+		}
 		
 		/* might use for later lol
 		for (setting in settingNames)
