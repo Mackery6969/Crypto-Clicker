@@ -1,5 +1,7 @@
 package;
 
+import lime.utils.Assets;
+
 class Util {
     static var file:String;
 
@@ -47,6 +49,16 @@ class Util {
 		return file = 'assets/$path.txt';
 	}
 
+    inline public static function read(path:String):String
+    {
+        return Assets.getText('assets/' + path);
+    }
+
+    inline public static function json(path:String)
+    {
+        return file = 'assets/$path.json';
+    }
+
 	inline public static function capitalize(text:String)
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
 
@@ -63,7 +75,7 @@ class Util {
 		return newValue / tempMult;
 	}
 
-	inline public static function browserLoad(site:String)
+	inline public static function openURL(site:String)
 	{
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
@@ -71,4 +83,20 @@ class Util {
 		FlxG.openURL(site);
 		#end
 	}
+
+    inline public static function getURL(site:String):String // grabs the text, like a github raw file
+    {
+        var request = new haxe.Http(site);
+        var response = "";
+        request.onData = function(data) {
+            response = data;
+        }
+        request.onError = function(error) {
+            trace('Error: $error');
+            response = '';
+        }
+        request.request(false);
+
+        return(response);
+    }
 }

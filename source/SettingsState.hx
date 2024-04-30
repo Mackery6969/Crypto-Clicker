@@ -210,6 +210,40 @@ class SettingsState extends FlxState
         autoPauseButton.y = autoPauseText.y + autoPauseText.height + 10;
         autoPauseButton.x = FlxG.width / 2 - autoPauseButton.width / 2 + 200;
         add(autoPauseButton);
+
+        /*
+        var resetSettingsText = new FlxText(0, 0, FlxG.width, "Reset Settings");
+        resetSettingsText.size = 18;
+        resetSettingsText.alignment = "center";
+        // position at bottom right corner leaving space for the button + reset game save button
+        resetSettingsText.y = FlxG.height - resetSettingsText.height - 10;
+        resetSettingsText.x = FlxG.width - resetSettingsText.width - 10;
+        add(resetSettingsText);
+
+        var resetSettingsButton = new FlxButton(0, 0, function() {
+            ClientPrefs.resetSettings();
+            FlxG.switchState(new SettingsState());
+        });
+        resetSettingsButton.y = resetSettingsText.y + resetSettingsText.height + 10;
+        resetSettingsButton.x = FlxG.width - resetSettingsButton.width - 10;
+        add(resetSettingsButton);
+
+        var resetGameSaveText = new FlxText(0, 0, FlxG.width, "Reset Game Save");
+        resetGameSaveText.size = 18;
+        resetGameSaveText.alignment = "center";
+        // position at bottom right corner leaving space for the button
+        resetGameSaveText.y = FlxG.height - resetGameSaveText.height - 10;
+        resetGameSaveText.x = FlxG.width - resetGameSaveText.width - resetSettingsText.width - 20;
+        add(resetGameSaveText);
+
+        var resetGameSaveButton = new FlxButton(0, 0, function() {
+            ClientPrefs.resetGameSave();
+            FlxG.switchState(new SettingsState());
+        });
+        resetGameSaveButton.y = resetGameSaveText.y + resetGameSaveText.height + 10;
+        resetGameSaveButton.x = FlxG.width - resetGameSaveButton.width - 10;
+        add(resetGameSaveButton);
+        */
     }
 
     override public function update(elapsed:Float)
