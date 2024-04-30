@@ -1,8 +1,8 @@
 package;
 
+import PlayState;
 import flixel.FlxG;
 import flixel.util.FlxSave;
-import PlayState;
 
 class ClientPrefs
 {
@@ -30,11 +30,7 @@ class ClientPrefs
 
 	// saved stuff (non option related)
 	// stuff soon xD
-	static var data:Array<String> = [
-		"money",
-		"moneyPerSecond",
-		"moneyPerClick"
-	];
+	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick"];
 
 	public static function saveSettings()
 	{
@@ -48,6 +44,7 @@ class ClientPrefs
 		FlxSprite.defaultAntialiasing = antialiasing;
 		#end
 		FlxG.autoPause = autoPause;
+		FlxG.fullscreen = fullscreen;
 
 		FlxG.save.flush();
 
@@ -82,6 +79,7 @@ class ClientPrefs
 		}
 		#end
 		FlxG.autoPause = autoPause;
+		FlxG.fullscreen = fullscreen;
 
 		FlxG.save.bind("game", "Crypto-Clicker-Save");
 		if (Reflect.hasField(FlxG.save.data, "money"))
