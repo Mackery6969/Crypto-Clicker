@@ -2,8 +2,9 @@ package;
 
 import lime.utils.Assets;
 
-class Util {
-    static var file:String;
+class Util
+{
+	static var file:String;
 
 	inline public static function image(image:String, folder:String = 'images')
 	{
@@ -49,15 +50,15 @@ class Util {
 		return file = 'assets/$path.txt';
 	}
 
-    inline public static function read(path:String):String
-    {
-        return Assets.getText('assets/' + path);
-    }
+	inline public static function read(path:String):String
+	{
+		return Assets.getText('assets/' + path);
+	}
 
-    inline public static function json(path:String)
-    {
-        return file = 'assets/$path.json';
-    }
+	inline public static function json(path:String)
+	{
+		return file = 'assets/$path.json';
+	}
 
 	inline public static function capitalize(text:String)
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
@@ -84,19 +85,47 @@ class Util {
 		#end
 	}
 
-    inline public static function getURL(site:String):String // grabs the text, like a github raw file
-    {
-        var request = new haxe.Http(site);
-        var response = "";
-        request.onData = function(data) {
-            response = data;
-        }
-        request.onError = function(error) {
-            trace('Error: $error');
-            response = '';
-        }
-        request.request(false);
+	inline public static function getURL(site:String):String // grabs the text, like a github raw file
+	{
+		var request = new haxe.Http(site);
+		var response = "";
+		request.onData = function(data)
+		{
+			response = data;
+		}
+		request.onError = function(error)
+		{
+			trace('Error: $error');
+			response = '';
+		}
+		request.request(false);
 
-        return(response);
-    }
+		return (response);
+	}
+
+	inline public static function round(value:Float, decimals:Int):Float
+	{
+		if (decimals < 1)
+			return Math.round(value);
+
+		var tempMult:Float = 1;
+		for (i in 0...decimals)
+			tempMult *= 10;
+
+		var newValue:Float = Math.round(value * tempMult);
+		return newValue / tempMult;
+	}
+
+	inline public static function roundDown(value:Float, decimals:Int):Float
+	{
+		if (decimals < 1)
+			return Math.floor(value);
+
+		var tempMult:Float = 1;
+		for (i in 0...decimals)
+			tempMult *= 10;
+
+		var newValue:Float = Math.floor(value * tempMult);
+		return newValue / tempMult;
+	}
 }

@@ -16,10 +16,12 @@ class PlayState extends FlxState
 	var gear:FlxSprite;
 	var shop:FlxSprite;
 	var updateButton:FlxSprite;
+	var computers:FlxText; // flxtext for placeholder
 
 	public static var money:Float = 0;
 	public static var moneyPerClick:Float = 0.25;
 	public static var moneyPerSecond:Float = 0;
+	public static var buildings:Array<Int> = [0];
 
 	override public function create()
 	{
@@ -76,6 +78,15 @@ class PlayState extends FlxState
 		shop.scale.set(0.3, 0.3);
 		shop.antialiasing = ClientPrefs.antialiasing;
 		add(shop);
+
+		// add placeholder for computers
+		computers = new FlxText(0, 0, FlxG.width, "Computers:" + buildings[0]);
+		// center of the screen
+		computers.x = (FlxG.width - computers.width) / 2 - 200;
+		computers.y = (FlxG.height - computers.height) / 2 + 100;
+		computers.size = 20;
+		computers.visible = false;
+		add(computers);
 	}
 
 	override public function update(elapsed:Float)
@@ -90,7 +101,7 @@ class PlayState extends FlxState
 
 		// update the text to show how much money you have
 		// this is done every frame
-		moneyText.text = '$' + money;
+		moneyText.text = '$' + Util.roundDown(money, 2);
 
 		ClientPrefs.saveSettings();
 
@@ -134,9 +145,19 @@ class PlayState extends FlxState
 		#if debug
 		// debug stuff
 		if (FlxG.keys.justPressed.U)
-		{
 			outdated = !outdated;
-		}
+		else if (FlxG.keys.justPressed.C)
+			buildings[0]++;
 		#end
+
+		// add money per second
+		// every second
+		money += moneyPerSecond * elapsed;
+
+		if (buildings[0] > 0)
+		{
+			computers.visible = true;
+			moneyPerSecond = buildings[0] * 0.001;
+		}
 	}
 }
