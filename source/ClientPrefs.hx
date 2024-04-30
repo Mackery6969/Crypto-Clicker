@@ -71,6 +71,17 @@ class ClientPrefs
 		{
 			framerate = Reflect.field(FlxG.save.data, "framerate");
 		}
+		// update framerate
+		if (framerate > FlxG.drawFramerate)
+		{
+			FlxG.updateFramerate = framerate;
+			FlxG.drawFramerate = framerate;
+		}
+		else
+		{
+			FlxG.drawFramerate = framerate;
+			FlxG.updateFramerate = framerate;
+		}
 		#if (flixel > "5.0.0")
 		if (Reflect.hasField(FlxG.save.data, "antialiasing"))
 		{
@@ -96,5 +107,32 @@ class ClientPrefs
 		}
 
 		FlxG.save.flush();
+	}
+
+	public static function resetSettings()
+	{
+		FlxG.save.bind("settings", "Crypto-Clicker-Settings");
+		FlxG.save.erase();
+		FlxG.save.flush();
+		FlxG.save.bind("game", "Crypto-Clicker-Save");
+		FlxG.save.erase();
+		FlxG.save.flush();
+	}
+
+	public static function setFPS(fps:Int)
+	{
+		framerate = fps;
+		if (framerate > FlxG.drawFramerate)
+		{
+			FlxG.updateFramerate = framerate;
+			FlxG.drawFramerate = framerate;
+		}
+		else
+		{
+			FlxG.drawFramerate = framerate;
+			FlxG.updateFramerate = framerate;
+		}
+
+		saveSettings();
 	}
 }
