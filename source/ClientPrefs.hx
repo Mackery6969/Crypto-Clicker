@@ -18,13 +18,12 @@ class ClientPrefs
 		"antialiasing",
 		"autoPause"
 	];
-	static var version:String = "1.0.0";
 	public static var fullscreen:Bool = false;
 	public static var sound:Bool = true;
 	public static var music:Bool = true;
 	public static var reducedMotion:Bool = false;
 	public static var showFPS:Bool = false;
-	public static var flashing:Bool = true;
+	public static var flashing:Bool = true; // assumes that this is true by default which should be fixed as fast as possible
 	public static var framerate:Int = 60;
 	public static var antialiasing:Bool = false;
 	public static var autoPause:Bool = true;
@@ -39,14 +38,16 @@ class ClientPrefs
 
 	public static function saveSettings()
 	{
+		FlxG.save.bind("settings", "Crypto-Clicker-Settings");
 		for (setting in settingNames)
 		{
 			Reflect.setField(FlxG.save.data, setting, Reflect.getProperty(ClientPrefs, setting));
-		} // thx srt for this xD
-		FlxG.save.data.framerate = framerate;
+		}
+		Reflect.setField(FlxG.save.data, "framerate", framerate);
 		#if (flixel > "5.0.0")
 		FlxSprite.defaultAntialiasing = antialiasing;
 		#end
+		FlxG.autoPause = autoPause;
 
 		FlxG.save.flush();
 
@@ -61,39 +62,7 @@ class ClientPrefs
 
 	public static function loadSettings()
 	{
-		FlxG.save.bind('crypto', 'Crypto-Clicker-Save');
-		for (setting in settingNames) {
-			var savedData = Reflect.field(FlxG.save.data, setting);
-			if (savedData != null)
-				Reflect.setProperty(ClientPrefs, setting, savedData);
-		}
-
-		if (FlxG.save.data.framerate != null) {
-			framerate = FlxG.save.data.framerate;
-			if (framerate > FlxG.drawFramerate) {
-				FlxG.updateFramerate = framerate;
-				FlxG.drawFramerate = framerate;
-			} else {
-				FlxG.drawFramerate = framerate;
-				FlxG.updateFramerate = framerate;
-			}
-		}
-
-		#if (flixel > "5.0.0")
-		FlxSprite.defaultAntialiasing = antialiasing;
-		#end
-
-		FlxG.autoPause = autoPause;
-		FlxG.fullscreen = fullscreen;
-
-		FlxG.save.bind('game', 'Crypto-Clicker-Save');
-		if (FlxG.save.data.money != null) {
-			PlayState.money = FlxG.save.data.money;
-			PlayState.moneyPerSecond = FlxG.save.data.moneyPerSecond;
-			PlayState.moneyPerClick = FlxG.save.data.moneyPerClick;
-		}
-		
-		/* might use for later lol
+		FlxG.save.bind("settings", "Crypto-Clicker-Settings");
 		for (setting in settingNames)
 		{
 			if (Reflect.hasField(FlxG.save.data, setting))
@@ -112,6 +81,22 @@ class ClientPrefs
 			FlxSprite.defaultAntialiasing = antialiasing;
 		}
 		#end
-		*/
+		FlxG.autoPause = autoPause;
+
+		FlxG.save.bind("game", "Crypto-Clicker-Save");
+		if (Reflect.hasField(FlxG.save.data, "money"))
+		{
+			PlayState.money = Reflect.field(FlxG.save.data, "money");
+		}
+		if (Reflect.hasField(FlxG.save.data, "moneyPerSecond"))
+		{
+			PlayState.moneyPerSecond = Reflect.field(FlxG.save.data, "moneyPerSecond");
+		}
+		if (Reflect.hasField(FlxG.save.data, "moneyPerClick"))
+		{
+			PlayState.moneyPerClick = Reflect.field(FlxG.save.data, "moneyPerClick");
+		}
+
+		FlxG.save.flush();
 	}
 }
