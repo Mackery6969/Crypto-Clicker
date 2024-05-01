@@ -1,15 +1,18 @@
 package;
 
+import openfl.geom.Matrix;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import haxe.io.Output;
+import flash.display.GradientType;
 
 class PlayState extends FlxState
 {
 	static var version:String; // for version checker
 	static var outdated:Bool = false; // for version checker
 
+	var bgGradient:FlxSprite;
 	var versionText:FlxText;
 	var cookie:FlxSprite;
 	var moneyText:FlxText;
@@ -40,6 +43,15 @@ class PlayState extends FlxState
 		}
 
 		super.create();
+
+		// add background
+		bgGradient = new FlxSprite(0, 0, Util.image("bgGradient"));
+		// fit to the screen
+		bgGradient.scale.set(FlxG.width / bgGradient.width * 2, FlxG.height / bgGradient.height * 4);
+		//bgGradient.y = -bgGradient.height + FlxG.height;
+		bgGradient.y = -400;
+		bgGradient.antialiasing = ClientPrefs.antialiasing;
+		add(bgGradient);
 
 		// add version text at the bottom left corner
 		versionText = new FlxText(0, 0, FlxG.width, version);
@@ -149,6 +161,7 @@ class PlayState extends FlxState
 		// close the game if escape is pressed
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
+			trace("Bye!");
 			Sys.exit(1);
 		}
 		#end
