@@ -87,11 +87,28 @@ class PlayState extends FlxState
 		computers.size = 20;
 		computers.visible = false;
 		add(computers);
+
+		// play the menu music
+		if (ClientPrefs.music && FlxG.sound.music == null) {
+			FlxG.sound.playMusic(Util.music("menu"), 0.5);
+			FlxG.sound.music.volume = 0.75;
+		}
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		// loop the music
+		if (FlxG.sound.music != null && !FlxG.sound.music.active && ClientPrefs.music)
+			FlxG.sound.playMusic(Util.music("menu"), 0.5);
+
+		if (FlxG.sound.music != null) {
+			if (!ClientPrefs.music)
+				FlxG.sound.music.stop();
+			else 
+				FlxG.sound.music.play();
+		}
 
 		if (outdated)
 		{
