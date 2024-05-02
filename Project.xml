@@ -3,7 +3,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Crypto Clicker" file="CryptoClicker" main="Main" version="1.0.0" company="MackeryGames" />
+	<app title="Crypto Clicker" file="CryptoClicker" main="Main" version="1.0.2" company="MackeryGames" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
