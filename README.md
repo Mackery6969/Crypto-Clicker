@@ -20,3 +20,10 @@ lol
 2. go to psych engine source lol
 3. run setup.bat
 4. run lime test [build] (windows, mac, android) to build the game
+
+## Credits
+- Mackery
+- Ronezjk15 (maker of Raldi)
+- 504Brandon (borrowed code)
+- Srt (borrowed code)
+- you
