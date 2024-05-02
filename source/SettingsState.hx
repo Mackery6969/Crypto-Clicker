@@ -7,18 +7,21 @@ import flixel.FlxState;
 class SettingsState extends FlxState
 {
 	var backArrow:FlxSprite;
+	var reloadReccomendedText:FlxText;
 	var fpsMenu:Bool = false;
 	var fpsBox:FlxSprite;
 	var fpsMenuText:FlxText;
 
 	var fps:Int = 60;
-	var showFPS:Bool = false;
-	var reloadRequired:Bool = false;
+
+	public static var showFPS:Bool = false;
+	public static var reloadRequired:Bool = false;
 
 	override public function create()
 	{
 		fps = ClientPrefs.framerate;
 		showFPS = ClientPrefs.showFPS;
+		reloadRequired = ClientPrefs.reloadRequired;
 
 		super.create();
 
@@ -32,6 +35,14 @@ class SettingsState extends FlxState
 		add(title);
 
 		var changesDoneText = new FlxText(0, 0, FlxG.width, "Changes have been made!");
+
+		reloadReccomendedText = new FlxText(0, 0, FlxG.width, "Reload Required!");
+		reloadReccomendedText.size = 18;
+		reloadReccomendedText.alignment = "center";
+		reloadReccomendedText.y = title.y + title.height + 10;
+		reloadReccomendedText.color = 0xFFFF0000;
+		reloadReccomendedText.visible = false;
+		add(reloadReccomendedText);
 
 		var musicText = new FlxText(0, 0, FlxG.width, "Music: ON");
 		musicText.size = 16;
@@ -329,9 +340,7 @@ class SettingsState extends FlxState
 				&& FlxG.mouse.y >= backArrow.y
 				&& FlxG.mouse.y <= backArrow.y + backArrow.height)
 			{
-				ClientPrefs.saveSettings();
-				trace("Settings Saved!");
-				FlxG.switchState(new PlayState());
+				exitState();
 			}
 		}
 
@@ -357,9 +366,7 @@ class SettingsState extends FlxState
 				}
 				else
 				{
-					ClientPrefs.saveSettings();
-					trace("Settings Saved!");
-					FlxG.switchState(new PlayState());
+					exitState();
 				}
 			}
 			else if (FlxG.keys.justPressed.LEFT)
@@ -374,6 +381,17 @@ class SettingsState extends FlxState
 			}
 		}
 		fpsMenuText.text = "Set FPS (60-200): " + fps;
+
+		if (reloadRequired)
+		{
+			add(reloadReccomendedText);
+		}
+		else
+		{
+			remove(reloadReccomendedText);
+		}
+
+		reloadReccomendedText.visible = reloadRequired;
 	}
 
 	function displayFPSMenu()
@@ -390,5 +408,17 @@ class SettingsState extends FlxState
 		trace("Closing FPS Menu");
 		fpsBox.visible = false;
 		fpsMenuText.visible = false;
+	}
+
+	function exitState()
+	{
+		if (ClientPrefs.showFPS != showFPS)
+		{
+			ClientPrefs.showFPS = showFPS;
+		}
+		ClientPrefs.reloadRequired = reloadRequired;
+		ClientPrefs.saveSettings();
+		trace("Settings Saved!");
+		FlxG.switchState(new PlayState());
 	}
 }

@@ -1,23 +1,15 @@
 package;
 
 import PlayState;
+import ViewLandState;
 import flixel.FlxG;
 import flixel.util.FlxSave;
-import ViewLandState;
 
 class ClientPrefs
 {
 	// for load and saving settings
 	static var settingNames:Array<String> = [
-		"fullscreen",
-		"sound",
-		"music",
-		"reducedMotion",
-		"showFPS",
-		"flashing",
-		"framerate",
-		"antialiasing",
-		"autoPause"
+		"fullscreen", "sound", "music", "reducedMotion", "showFPS", "flashing", "framerate", "antialiasing", "autoPause", "reloadRequired"
 	];
 	public static var fullscreen:Bool = false;
 	public static var sound:Bool = true;
@@ -28,6 +20,7 @@ class ClientPrefs
 	public static var framerate:Int = 60;
 	public static var antialiasing:Bool = false;
 	public static var autoPause:Bool = true;
+	public static var reloadRequired:Bool = false; // not actually an option, just a flag to know if the game needs to be reloaded to apply the settings
 
 	// saved stuff (non option related)
 	// stuff soon xD
@@ -70,6 +63,11 @@ class ClientPrefs
 				Reflect.setProperty(ClientPrefs, setting, Reflect.field(FlxG.save.data, setting));
 			}
 		}
+		if (Reflect.hasField(FlxG.save.data, "reloadRequired"))
+		{
+			reloadRequired = Reflect.field(FlxG.save.data, "reloadRequired");
+		}
+
 		if (Reflect.hasField(FlxG.save.data, "framerate"))
 		{
 			framerate = Reflect.field(FlxG.save.data, "framerate");

@@ -30,5 +30,11 @@ class Main extends Sprite
 		ClientPrefs.fullscreen = true;
 		ClientPrefs.autoPause = FlxG.mouse.visible = false;
 		#end
+
+		if (ClientPrefs.reloadRequired)
+		{
+			ClientPrefs.reloadRequired = false;
+			trace("Reload no longer needed!");
+		}
 	}
 }
