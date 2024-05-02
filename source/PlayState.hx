@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import haxe.io.Output;
 import flash.display.GradientType;
+import flixel.input.keyboard.FlxKey;
 
 class PlayState extends FlxState
 {
@@ -25,6 +26,15 @@ class PlayState extends FlxState
 	public static var moneyPerClick:Float = 0.25;
 	public static var moneyPerSecond:Float = 0;
 	public static var buildings:Array<Int> = [0];
+	public static var inDebt:Bool = false;
+
+	var moneyShownAsText:Float = 0;
+	// make an array for the correct keys to be pressed (konomi code) in order
+	var easterEggKeys:Array<String> = [
+		'KILDARE'
+	];
+	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var easterEggKeysBuffer:String = '';
 
 	override public function create()
 	{
@@ -130,7 +140,11 @@ class PlayState extends FlxState
 
 		// update the text to show how much money you have
 		// this is done every frame
-		moneyText.text = '$' + Util.roundDown(money, 2);
+		if (money > 0)
+			moneyShownAsText = Util.roundToInterval(money, 0.25);
+		else 
+			moneyShownAsText = Util.round(money, 2); // i want it to show how much money you are in debt
+		moneyText.text = '$' + moneyShownAsText;
 
 		ClientPrefs.saveSettings();
 
@@ -170,6 +184,18 @@ class PlayState extends FlxState
 		if (money < 0)
 		{
 			// user is in debt, they have 1 minute to pay it off or else they lose
+			moneyText.color = 0xFF0000;
+			// make moneyText shake
+
+			// if the user doesn't pay off their debt in 1 minute they lose
+			// they will be taken to the game over screen
+			// the game over screen will show how much money they made overall
+			inDebt = true;
+			FlxG.sound.music.pause();
+		} else {
+			moneyText.color = 0xFFFFFF;
+			inDebt = false;
+			FlxG.sound.music.resume();
 		}
 
 		#if debug
@@ -178,9 +204,11 @@ class PlayState extends FlxState
 			outdated = !outdated;
 		else if (FlxG.keys.justPressed.C)
 			buildings[0]++;
-
-		// right now the ViewLandState is unused
-		if (FlxG.keys.justPressed.V)
+		else if (FlxG.keys.justPressed.PLUS)
+			money += 10;
+		else if (FlxG.keys.justPressed.MINUS)
+			money -= 10;
+		else if (FlxG.keys.justPressed.V)
 			FlxG.switchState(new ViewLandState());
 		#end
 
@@ -192,6 +220,35 @@ class PlayState extends FlxState
 		{
 			computers.visible = true;
 			moneyPerSecond = buildings[0] * 0.001;
+		}
+
+		// check if the konomi code is pressed
+		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) // thx psych engine
+		{
+			var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
+			var keyName:String = Std.string(keyPressed);
+			if(allowedKeys.contains(keyName)) {
+				easterEggKeysBuffer += keyName;
+				if(easterEggKeysBuffer.length >= 32) easterEggKeysBuffer = easterEggKeysBuffer.substring(1);
+
+				for (wordRaw in easterEggKeys)
+				{
+					var word:String = wordRaw.toUpperCase(); //just for being sure you're doing it right
+					if (easterEggKeysBuffer.contains(word))
+					{
+						//trace('YOOO! ' + word);
+						switch(word) {
+							case 'KILDARE':
+								#if desktop
+								Util.error("Nice Try", "Kildare");
+								#if sys
+								Sys.exit(1);
+								#end
+								#end
+						}
+					}
+				}
+			}
 		}
 	}
 }

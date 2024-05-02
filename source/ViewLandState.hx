@@ -56,7 +56,16 @@ class ViewLandState extends FlxState
 		//bgGradient.y = -bgGradient.height + FlxG.height;
 		bgGradient.y = -400;
 		bgGradient.antialiasing = ClientPrefs.antialiasing;
+        bgGradient.scrollFactor.set(0, 0);
 		add(bgGradient);
+
+        // adds a red background as a border behind the tiles
+        var bg = new FlxSprite(171, 171);
+        bg.makeGraphic(64 * 19, 64 * 19, 0xffff0000);
+        // position the background to be 5 pixels away from the outer tiles
+        bg.x = -31;
+        bg.y = -31;
+        add(bg);
 
         // create a grid of 18x18 tiles
         // check if the land isnt already saved or not (to prevent overwriting the save file)
@@ -69,7 +78,7 @@ class ViewLandState extends FlxState
                 }
             }
         }
-        
+
         // set the center tile to be owned by the player
         lands[9 * 18 + 9].owned = true;
         lands[9 * 18 + 9].selected = true;
@@ -142,15 +151,9 @@ class ViewLandState extends FlxState
             }
         }
 
-        // center the camera on currently selected land (slowly move it there)
-        for (y in 0...18) {
-            for (x in 0...18) {
-                var land = lands[y * 18 + x];
-                if (land.selected) {
-                    FlxG.camera.focusOn(new FlxPoint(x * 64, y * 64));
-                }
-            }
-        }
+        // center the camera on currently selected land (slowly move it there) with a smooth camera movement
+        var point:FlxPoint = new FlxPoint(curSelectedLand.x * 64 + 32, curSelectedLand.y * 64 + 32);
+        FlxG.camera.focusOn(point);
 
         // highlight the selected land with a red outline
         for (y in 0...18) {

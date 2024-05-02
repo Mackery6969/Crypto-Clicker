@@ -31,7 +31,7 @@ class ClientPrefs
 
 	// saved stuff (non option related)
 	// stuff soon xD
-	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick", "land"];
+	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick", "lands", "inDebt"];
 
 	public static function saveSettings()
 	{
@@ -54,7 +54,8 @@ class ClientPrefs
 		saveData.data.money = PlayState.money;
 		saveData.data.moneyPerSecond = PlayState.moneyPerSecond;
 		saveData.data.moneyPerClick = PlayState.moneyPerClick;
-		saveData.data.land = ViewLandState.lands;
+		saveData.data.inDebt = PlayState.inDebt;
+		saveData.data.lands = ViewLandState.lands;
 		saveData.flush();
 		saveData.destroy();
 	}
@@ -107,22 +108,34 @@ class ClientPrefs
 		{
 			PlayState.moneyPerClick = Reflect.field(FlxG.save.data, "moneyPerClick");
 		}
-		if (Reflect.hasField(FlxG.save.data, "land"))
+		if (Reflect.hasField(FlxG.save.data, "inDebt"))
 		{
-			ViewLandState.lands = Reflect.field(FlxG.save.data, "land");
+			PlayState.inDebt = Reflect.field(FlxG.save.data, "inDebt");
+		}
+		if (Reflect.hasField(FlxG.save.data, "lands"))
+		{
+			ViewLandState.lands = Reflect.field(FlxG.save.data, "lands");
 		}
 
 		FlxG.save.flush();
+
+		trace("Settings loaded");
 	}
 
-	public static function resetSettings()
+	public static function resetSettings(category:String)
 	{
-		FlxG.save.bind("settings", "Crypto-Clicker-Settings");
+		if (category == "settings")
+			FlxG.save.bind("settings", "Crypto-Clicker-Settings");
+		else if (category == "game")
+			FlxG.save.bind("game", "Crypto-Clicker-Save");
+		else
+			return;
 		FlxG.save.erase();
 		FlxG.save.flush();
-		FlxG.save.bind("game", "Crypto-Clicker-Save");
-		FlxG.save.erase();
-		FlxG.save.flush();
+
+		#if sys
+		Sys.exit(1);
+		#end
 	}
 
 	public static function setFPS(fps:Int)

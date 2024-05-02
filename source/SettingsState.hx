@@ -261,45 +261,46 @@ class SettingsState extends FlxState
 		autoPauseButton.x = FlxG.width / 2 - autoPauseButton.width / 2 + 200;
 		add(autoPauseButton);
 
-		/*
-			var resetSettingsText = new FlxText(0, 0, FlxG.width, "Reset Settings");
-			resetSettingsText.size = 18;
-			resetSettingsText.alignment = "center";
-			// position at bottom right corner leaving space for the button + reset game save button
-			resetSettingsText.y = FlxG.height - resetSettingsText.height - 10;
-			resetSettingsText.x = FlxG.width - resetSettingsText.width - 10;
-			add(resetSettingsText);
+		var resetSettingsText = new FlxText(0, 0, FlxG.width, "Reset Settings");
+		resetSettingsText.size = 18;
+		resetSettingsText.alignment = "center";
+		// position at bottom right corner leaving space for the button + reset game save button
+		resetSettingsText.y = FlxG.height / 2 - resetSettingsText.height / 2 + 300;
+		resetSettingsText.x = FlxG.width / 2 - resetSettingsText.width / 2 + 320;
+		add(resetSettingsText);
 
-			var resetSettingsButton = new FlxButton(0, 0, function() {
-				ClientPrefs.resetSettings();
-				FlxG.switchState(new SettingsState());
-			});
-			resetSettingsButton.y = resetSettingsText.y + resetSettingsText.height + 10;
-			resetSettingsButton.x = FlxG.width - resetSettingsButton.width - 10;
-			add(resetSettingsButton);
+		var resetSettingsButton = new FlxButton(0, 0, function() {
+			trace("Resetting Settings...");
+			ClientPrefs.resetSettings("settings");
+			FlxG.switchState(new SettingsState());
+		});
+		resetSettingsButton.y = resetSettingsText.y + resetSettingsText.height + 10;
+		resetSettingsButton.x = FlxG.width / 2 - resetSettingsButton.width / 2 + 320;
+		add(resetSettingsButton);
 
-			var resetGameSaveText = new FlxText(0, 0, FlxG.width, "Reset Game Save");
-			resetGameSaveText.size = 18;
-			resetGameSaveText.alignment = "center";
-			// position at bottom right corner leaving space for the button
-			resetGameSaveText.y = FlxG.height - resetGameSaveText.height - 10;
-			resetGameSaveText.x = FlxG.width - resetGameSaveText.width - resetSettingsText.width - 20;
-			add(resetGameSaveText);
+		var resetGameSaveText = new FlxText(0, 0, FlxG.width, "Reset Game Save");
+		resetGameSaveText.size = 18;
+		resetGameSaveText.alignment = "center";
+		// position at bottom right corner leaving space for the button1
+		resetGameSaveText.y = FlxG.height / 2 - resetGameSaveText.height / 2 + 300;
+		resetGameSaveText.x = FlxG.width / 2 - resetSettingsText.width / 2 + 520;
+		add(resetGameSaveText);
 
-			var resetGameSaveButton = new FlxButton(0, 0, function() {
-				ClientPrefs.resetGameSave();
-				FlxG.switchState(new SettingsState());
-			});
-			resetGameSaveButton.y = resetGameSaveText.y + resetGameSaveText.height + 10;
-			resetGameSaveButton.x = FlxG.width - resetGameSaveButton.width - 10;
-			add(resetGameSaveButton);
-		 */
+		var resetGameSaveButton = new FlxButton(0, 0, function() {
+			trace("Resetting Game Data...");
+			ClientPrefs.resetSettings("game");
+			FlxG.switchState(new SettingsState());
+		});
+		resetGameSaveButton.y = resetGameSaveText.y + resetGameSaveText.height + 10;
+		resetGameSaveButton.x = FlxG.width / 2 - resetGameSaveButton.width / 2 + 520;
+		add(resetGameSaveButton);
 
 		// for the fps menu
 		// add grey box infront of the game
 		fpsBox = new FlxSprite(0, 0);
 		fpsBox.makeGraphic(FlxG.width, FlxG.height, 0x88000000);
 		fpsBox.visible = false;
+		fpsBox.alpha = 0.9;
 		add(fpsBox);
 
 		// add text

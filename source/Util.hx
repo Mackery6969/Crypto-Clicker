@@ -128,4 +128,15 @@ class Util
 		var newValue:Float = Math.floor(value * tempMult);
 		return newValue / tempMult;
 	}
+
+	inline public static function roundToInterval(value:Float, interval:Float):Float
+	{
+		return Math.round(value / interval) * interval;
+	}
+
+	#if desktop
+	public static function error(error:String, name:String) {
+		FlxG.stage.window.alert(error, name);
+	}
+	#end
 }
