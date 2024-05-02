@@ -165,8 +165,8 @@ class SettingsState extends FlxState
 
 		var showFPSButton = new FlxButton(0, 0, function()
 		{
-			ClientPrefs.showFPS = !ClientPrefs.showFPS;
-			if (ClientPrefs.showFPS)
+			showFPS = !showFPS;
+			if (showFPS)
 			{
 				showFPSText.text = "Show FPS: TRUE";
 			}
@@ -175,6 +175,14 @@ class SettingsState extends FlxState
 				showFPSText.text = "Show FPS: FALSE";
 			}
 			// check if it has changed from its previous value
+			if (showFPS != ClientPrefs.showFPS)
+			{
+				reloadRequired = true;
+			}
+			else
+			{
+				reloadRequired = false;
+			}
 		});
 		showFPSButton.y = showFPSText.y + showFPSText.height + 10;
 		showFPSButton.x = FlxG.width / 2 - showFPSButton.width / 2 + 400;
@@ -412,10 +420,7 @@ class SettingsState extends FlxState
 
 	function exitState()
 	{
-		if (ClientPrefs.showFPS != showFPS)
-		{
-			ClientPrefs.showFPS = showFPS;
-		}
+		ClientPrefs.showFPS = showFPS;
 		ClientPrefs.reloadRequired = reloadRequired;
 		ClientPrefs.saveSettings();
 		trace("Settings Saved!");
