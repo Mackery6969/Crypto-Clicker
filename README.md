@@ -17,7 +17,7 @@ lol
 
 ## How to build
 1. Clone the repo
-2. go to psych engine source lol
+2. go to [psych engine source](https://github.com/ShadowMario/FNF-PsychEngine/tree/main/setup) lol
 3. run setup.bat
 4. run lime test [build] (windows, mac, android) to build the game
 
