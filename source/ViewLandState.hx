@@ -1,198 +1,260 @@
 package;
 
-import flixel.FlxObject;
 import LandOptionsState;
+import flixel.FlxObject;
 
-class Land {
-    public var y:Int;
-    public var x:Int;
-    public var selected:Bool;
-    public var type:String;
-    public var owned:Bool;
-    public var cost:Float;
-    public var sellPrice:Float;
-    public var building:String;
+class Land
+{
+	public var y:Int;
+	public var x:Int;
+	public var selected:Bool;
+	public var type:String;
+	public var owned:Bool;
+	public var cost:Float;
+	public var sellPrice:Float;
+	public var building:String;
 
-    public function new(y:Int, x:Int, selected:Bool, type:String, owned:Bool, cost:Float, sellPrice:Float, building:String) {
-        this.y = y;
-        this.x = x;
-        this.selected = selected;
-        this.type = type;
-        this.owned = owned;
-        this.building = building;
-    }
+	public function new(y:Int, x:Int, selected:Bool, type:String, owned:Bool, cost:Float, sellPrice:Float, building:String)
+	{
+		this.y = y;
+		this.x = x;
+		this.selected = selected;
+		this.type = type;
+		this.owned = owned;
+		this.building = building;
+	}
 }
 
 class ViewLandState extends FlxState
 {
+	// a grid system of 18x18 tiles, player gets tile x 9 and y 9 free
+	// you can buy tiles for 100 dollars each
+	// you can sell tiles for 50 dollars each
+	// you can add buildings thats in your inventory to the tiles to make them generate money for you
+	// you can buy tiles in all 8 directions from your claimed ones
+	var bgGradient:FlxSprite;
 
-    // a grid system of 18x18 tiles, player gets tile x 9 and y 9 free
-    // you can buy tiles for 100 dollars each
-    // you can sell tiles for 50 dollars each
-    // you can add buildings thats in your inventory to the tiles to make them generate money for you
-    // you can buy tiles in all 8 directions from your claimed ones
+	public static var lands:Array<Land>;
 
-    var bgGradient:FlxSprite;
+	var selectedOutline:FlxSprite;
 
-    public static var lands:Array<Land>;
-    var selectedOutline:FlxSprite;
-    public static var curSelectedLand:Land;
+	public static var curSelectedLand:Land;
 
-    var landMinPrice:Float = 100;
-    var landMaxPrice:Float = 1000;
+	var landMinPrice:Float = 100;
+	var landMaxPrice:Float = 1000;
 
-    var landSellMinPrice:Float = 50;
-    var landSellMaxPrice:Float = 500;
+	var landSellMinPrice:Float = 50;
+	var landSellMaxPrice:Float = 500;
 
-    override public function create() {
-        ClientPrefs.loadSettings();
+	override public function create()
+	{
+		ClientPrefs.loadSettings();
 
-        super.create();
+		super.create();
 
-        // add background
+		// add background
 		bgGradient = new FlxSprite(0, 0, Util.image("bgGradient"));
 		// fit to the screen
 		bgGradient.scale.set(FlxG.width / bgGradient.width * 2, FlxG.height / bgGradient.height * 4);
-		//bgGradient.y = -bgGradient.height + FlxG.height;
+		// bgGradient.y = -bgGradient.height + FlxG.height;
 		bgGradient.y = -400;
 		bgGradient.antialiasing = ClientPrefs.antialiasing;
-        bgGradient.scrollFactor.set(0, 0);
+		bgGradient.scrollFactor.set(0, 0);
 		add(bgGradient);
 
-        // adds a red background as a border behind the tiles
-        var bg = new FlxSprite(171, 171);
-        bg.makeGraphic(64 * 19, 64 * 19, 0xffff0000);
-        // position the background to be 5 pixels away from the outer tiles
-        bg.x = -31;
-        bg.y = -31;
-        add(bg);
+		// adds a red background as a border behind the tiles
+		var bg = new FlxSprite(171, 171);
+		bg.makeGraphic(64 * 19, 64 * 19, 0xffff0000);
+		// position the background to be 5 pixels away from the outer tiles
+		bg.x = -31;
+		bg.y = -31;
+		add(bg);
 
-        // create a grid of 18x18 tiles
-        // check if the land isnt already saved or not (to prevent overwriting the save file)
-        if (lands == null) {
-            lands = [];
-            for (y in 0...18) {
-                for (x in 0...18) {
-                    var land = new Land(y, x, false, "land", false, Math.floor(Math.random() * (landMaxPrice - landMinPrice) + landMaxPrice), Math.floor(Math.random() * (landSellMaxPrice - landSellMinPrice) + landSellMaxPrice), "");
-                    lands.push(land);
-                }
-            }
-        }
+		// create a grid of 18x18 tiles
+		// check if the land isnt already saved or not (to prevent overwriting the save file)
+		if (lands == null)
+		{
+			lands = [];
+			for (y in 0...18)
+			{
+				for (x in 0...18)
+				{
+					var land = new Land(y, x, false, "land", false, Math.floor(Math.random() * (landMaxPrice - landMinPrice) + landMaxPrice),
+						Math.floor(Math.random() * (landSellMaxPrice - landSellMinPrice) + landSellMaxPrice), "");
+					lands.push(land);
+				}
+			}
+		}
 
-        // set the center tile to be owned by the player
-        lands[9 * 18 + 9].owned = true;
-        lands[9 * 18 + 9].selected = true;
-        lands[9 * 18 + 9].sellPrice = 0;
+		// set the center tile to be owned by the player
+		lands[9 * 18 + 9].owned = true;
+		lands[9 * 18 + 9].selected = true;
+		lands[9 * 18 + 9].sellPrice = 0;
 
-        // create a grid of 18x18 sprites
-        for (y in 0...18) {
-            for (x in 0...18) {
-                var land = lands[y * 18 + x];
-                var sprite = new FlxSprite(x * 64, y * 64);
-                sprite.makeGraphic(64, 64, 0xff00ff00);
-                add(sprite);
-            }
-        }
+		// create a grid of 18x18 sprites
+		for (y in 0...18)
+		{
+			for (x in 0...18)
+			{
+				var land = lands[y * 18 + x];
+				var sprite = new FlxSprite(x * 64, y * 64);
+				sprite.makeGraphic(64, 64, 0xff00ff00);
+				add(sprite);
+			}
+		}
 
-        // create a grid of 18x18 text
-        // text says if the land is owned or not
-        for (y in 0...18) {
-            for (x in 0...18) {
-                var land = lands[y * 18 + x];
-                var text = new FlxText(x * 64, y * 64, 64, land.owned ? "owned" : "not owned");
-                add(text);
-            }
-        }
+		// create a grid of 18x18 text
+		// text says if the land is owned or not
+		for (y in 0...18)
+		{
+			for (x in 0...18)
+			{
+				var land = lands[y * 18 + x];
+				var text = new FlxText(x * 64, y * 64, 64, land.owned ? "owned" : "not owned");
+				add(text);
+			}
+		}
 
-        // initialize the selected outline
-        selectedOutline = new FlxSprite(171 + 64, 171 + 64);
-        selectedOutline.makeGraphic(64, 64, 0xffff0000);
-        selectedOutline.alpha = 0.5;
-        add(selectedOutline);
+		// initialize the selected outline
+		selectedOutline = new FlxSprite(171 + 64, 171 + 64, Util.image("selectionBox"));
+		// selectedOutline.scale.set(18, 18);
+		add(selectedOutline);
 
-        // if curSelectedLand is null, set it to the center tile
-        if (curSelectedLand == null) {
-            curSelectedLand = lands[9 * 18 + 9];
-        }
-        else
-        {
-            // if curSelectedLand is not null, find it in the lands array
-            // and set it to the found land
-            for (land in lands) {
-                if (land.x == curSelectedLand.x && land.y == curSelectedLand.y) {
-                    curSelectedLand = land;
-                }
-            }
-        
-        }
-    }
-    
-    override public function update(elapsed:Float) {
-        super.update(elapsed);
+		// if curSelectedLand is null, set it to the center tile
+		if (curSelectedLand == null)
+		{
+			curSelectedLand = lands[9 * 18 + 9];
+		}
+		else
+		{
+			// if curSelectedLand is not null, find it in the lands array
+			// and set it to the found land
+			for (land in lands)
+			{
+				if (land.x == curSelectedLand.x && land.y == curSelectedLand.y)
+				{
+					curSelectedLand = land;
+				}
+			}
+		}
+	}
 
-        // check if the player clicks on a tile
-        // opens a sub menu where the player can choose to buy/sell a tile
-        // if its bought they can add a building to it
-        // if its sold the building is removed
-        
-        // mark land thats clicked on as selected (and unselect the previous one)
-        if (FlxG.mouse.justPressed) {
-            for (y in 0...18) {
-                for (x in 0...18) {
-                    var land = lands[y * 18 + x];
-                    if (FlxG.mouse.x >= x * 64 && FlxG.mouse.x < (x + 1) * 64 && FlxG.mouse.y >= y * 64 && FlxG.mouse.y < (y + 1) * 64) {
-                        for (land in lands) {
-                            land.selected = false;
-                        }
-                        land.selected = true;
-                        curSelectedLand = land;
-                    }
-                }
-            }
-        }
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        // center the camera on currently selected land (slowly move it there) with a smooth camera movement
-        var point:FlxPoint = new FlxPoint(curSelectedLand.x * 64 + 32, curSelectedLand.y * 64 + 32);
-        FlxG.camera.focusOn(point);
+		// check if the player clicks on a tile
+		// opens a sub menu where the player can choose to buy/sell a tile
+		// if its bought they can add a building to it
+		// if its sold the building is removed
 
-        // highlight the selected land with a red outline
-        for (y in 0...18) {
-            for (x in 0...18) {
-                var land = lands[y * 18 + x];
-                if (land.selected) {
-                    selectedOutline.x = x * 64;
-                    selectedOutline.y = y * 64;
-                }
-            }
-        }
+		// mark land thats clicked on as selected (and unselect the previous one)
+		if (FlxG.mouse.justPressed)
+		{
+			for (y in 0...18)
+			{
+				for (x in 0...18)
+				{
+					var land = lands[y * 18 + x];
+					if (FlxG.mouse.x >= x * 64 && FlxG.mouse.x < (x + 1) * 64 && FlxG.mouse.y >= y * 64 && FlxG.mouse.y < (y + 1) * 64)
+					{
+						for (land in lands)
+						{
+							land.selected = false;
+						}
+						land.selected = true;
+						curSelectedLand = land;
+					}
+				}
+			}
+		}
 
-        if (FlxG.keys.justPressed.ESCAPE) {
-            FlxG.switchState(new PlayState());
-        }
+		// center the camera on currently selected land (slowly move it there) with a smooth camera movement
+		var point:FlxPoint = new FlxPoint(curSelectedLand.x * 64 + 32, curSelectedLand.y * 64 + 32);
+		FlxG.camera.focusOn(point);
 
-        if (FlxG.keys.justPressed.SPACE) {
-            // save the current selected land
-            // switch to the land options state
-            FlxG.switchState(new LandOptionsState(curSelectedLand));
-        }
+		// highlight the selected land with a red outline
+		for (y in 0...18)
+		{
+			for (x in 0...18)
+			{
+				var land = lands[y * 18 + x];
+				if (land.selected)
+				{
+					selectedOutline.x = x * 64;
+					selectedOutline.y = y * 64;
+				}
+			}
+		}
 
-        // save the lands array to the save file
-        ClientPrefs.saveSettings();
-    }
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
+			FlxG.switchState(new PlayState());
+		}
 
-    // buy land
-    public static function buyLand(land:Land) {
-        land.owned = true;
-        ClientPrefs.saveSettings();
+		if (FlxG.keys.justPressed.SPACE)
+		{
+			// save the current selected land
+			// switch to the land options state
+			FlxG.switchState(new LandOptionsState(curSelectedLand));
+		}
 
-        // update the text on the land
-        /*
-        for (y in 0...18) {
-            for (x in 0...18) {
-                var text = new FlxText(x * 64, y * 64, 64, land.owned ? "owned" : "not owned");
-                add(text);
-            }
-        }
-        */
-    }
+		// move the selected land with the arrow keys
+		/*
+			if (FlxG.keys.justPressed.LEFT)
+			{
+				if (curSelectedLand.x > 0)
+				{
+					curSelectedLand = lands[curSelectedLand.y * 18 + curSelectedLand.x - 1];
+				}
+			}
+			if (FlxG.keys.justPressed.RIGHT)
+			{
+				if (curSelectedLand.x < 17)
+				{
+					curSelectedLand = lands[curSelectedLand.y * 18 + curSelectedLand.x + 1];
+				}
+			}
+			if (FlxG.keys.justPressed.UP)
+			{
+				if (curSelectedLand.y > 0)
+				{
+					curSelectedLand = lands[(curSelectedLand.y - 1) * 18 + curSelectedLand.x];
+				}
+			}
+			if (FlxG.keys.justPressed.DOWN)
+			{
+				if (curSelectedLand.y < 17)
+				{
+					curSelectedLand = lands[(curSelectedLand.y + 1) * 18 + curSelectedLand.x];
+				}
+			}
+		 */
+
+		// save the lands array to the save file
+		ClientPrefs.saveSettings();
+	}
+
+	// buy land
+	public static function buyLand(land:Land)
+	{
+		land.owned = true;
+		ClientPrefs.saveSettings();
+
+		// update the text on the land
+		/*
+			for (y in 0...18) {
+				for (x in 0...18) {
+					var text = new FlxText(x * 64, y * 64, 64, land.owned ? "owned" : "not owned");
+					add(text);
+				}
+			}
+		 */
+	}
+
+	function updateSelection()
+	{
+		selectedOutline.x = curSelectedLand.x * 64;
+		selectedOutline.y = curSelectedLand.y * 64;
+	}
 }

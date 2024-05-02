@@ -1,12 +1,12 @@
 package;
 
-import openfl.geom.Matrix;
+import flash.display.GradientType;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import haxe.io.Output;
-import flash.display.GradientType;
 import flixel.input.keyboard.FlxKey;
+import haxe.io.Output;
+import openfl.geom.Matrix;
 
 class PlayState extends FlxState
 {
@@ -30,9 +30,7 @@ class PlayState extends FlxState
 
 	var moneyShownAsText:Float = 0;
 	// make an array for the correct keys to be pressed (konomi code) in order
-	var easterEggKeys:Array<String> = [
-		'KILDARE'
-	];
+	var easterEggKeys:Array<String> = ['KILDARE', 'NEIL'];
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var easterEggKeysBuffer:String = '';
 
@@ -58,7 +56,7 @@ class PlayState extends FlxState
 		bgGradient = new FlxSprite(0, 0, Util.image("bgGradient"));
 		// fit to the screen
 		bgGradient.scale.set(FlxG.width / bgGradient.width * 2, FlxG.height / bgGradient.height * 4);
-		//bgGradient.y = -bgGradient.height + FlxG.height;
+		// bgGradient.y = -bgGradient.height + FlxG.height;
 		bgGradient.y = -400;
 		bgGradient.antialiasing = ClientPrefs.antialiasing;
 		add(bgGradient);
@@ -111,7 +109,8 @@ class PlayState extends FlxState
 		add(computers);
 
 		// play the menu music
-		if (ClientPrefs.music && FlxG.sound.music == null) {
+		if (ClientPrefs.music && FlxG.sound.music == null)
+		{
 			FlxG.sound.playMusic(Util.music("menu"), 0.5);
 			FlxG.sound.music.volume = 0.75;
 		}
@@ -125,10 +124,11 @@ class PlayState extends FlxState
 		if (FlxG.sound.music != null && !FlxG.sound.music.active && ClientPrefs.music)
 			FlxG.sound.playMusic(Util.music("menu"), 0.5);
 
-		if (FlxG.sound.music != null) {
+		if (FlxG.sound.music != null)
+		{
 			if (!ClientPrefs.music)
 				FlxG.sound.music.stop();
-			else 
+			else
 				FlxG.sound.music.play();
 		}
 
@@ -142,7 +142,7 @@ class PlayState extends FlxState
 		// this is done every frame
 		if (money > 0)
 			moneyShownAsText = Util.roundToInterval(money, 0.25);
-		else 
+		else
 			moneyShownAsText = Util.round(money, 2); // i want it to show how much money you are in debt
 		moneyText.text = '$' + moneyShownAsText;
 
@@ -192,7 +192,9 @@ class PlayState extends FlxState
 			// the game over screen will show how much money they made overall
 			inDebt = true;
 			FlxG.sound.music.pause();
-		} else {
+		}
+		else
+		{
 			moneyText.color = 0xFFFFFF;
 			inDebt = false;
 			FlxG.sound.music.resume();
@@ -227,23 +229,30 @@ class PlayState extends FlxState
 		{
 			var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
 			var keyName:String = Std.string(keyPressed);
-			if(allowedKeys.contains(keyName)) {
+			if (allowedKeys.contains(keyName))
+			{
 				easterEggKeysBuffer += keyName;
-				if(easterEggKeysBuffer.length >= 32) easterEggKeysBuffer = easterEggKeysBuffer.substring(1);
+				if (easterEggKeysBuffer.length >= 32)
+					easterEggKeysBuffer = easterEggKeysBuffer.substring(1);
 
 				for (wordRaw in easterEggKeys)
 				{
-					var word:String = wordRaw.toUpperCase(); //just for being sure you're doing it right
+					var word:String = wordRaw.toUpperCase(); // just for being sure you're doing it right
 					if (easterEggKeysBuffer.contains(word))
 					{
-						//trace('YOOO! ' + word);
-						switch(word) {
+						// trace('YOOO! ' + word);
+						switch (word)
+						{
 							case 'KILDARE':
 								#if desktop
 								Util.error("Nice Try", "Kildare");
 								#if sys
 								Sys.exit(1);
 								#end
+								#end
+							case 'NEIL':
+								#if desktop
+								Util.error("Im not ready yet.", "Try Again Another Update..");
 								#end
 						}
 					}
