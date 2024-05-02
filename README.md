@@ -26,4 +26,4 @@ lol
 - Ronezjk15 (maker of Raldi)
 - 504Brandon (borrowed code)
 - Srt (borrowed code)
-- you!
+- you! (for reading this)
