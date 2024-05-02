@@ -3,6 +3,7 @@ package;
 import PlayState;
 import flixel.FlxG;
 import flixel.util.FlxSave;
+import ViewLandState;
 
 class ClientPrefs
 {
@@ -30,7 +31,7 @@ class ClientPrefs
 
 	// saved stuff (non option related)
 	// stuff soon xD
-	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick"];
+	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick", "land"];
 
 	public static function saveSettings()
 	{
@@ -53,6 +54,7 @@ class ClientPrefs
 		saveData.data.money = PlayState.money;
 		saveData.data.moneyPerSecond = PlayState.moneyPerSecond;
 		saveData.data.moneyPerClick = PlayState.moneyPerClick;
+		saveData.data.land = ViewLandState.lands;
 		saveData.flush();
 		saveData.destroy();
 	}
@@ -104,6 +106,10 @@ class ClientPrefs
 		if (Reflect.hasField(FlxG.save.data, "moneyPerClick"))
 		{
 			PlayState.moneyPerClick = Reflect.field(FlxG.save.data, "moneyPerClick");
+		}
+		if (Reflect.hasField(FlxG.save.data, "land"))
+		{
+			ViewLandState.lands = Reflect.field(FlxG.save.data, "land");
 		}
 
 		FlxG.save.flush();

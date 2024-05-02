@@ -14,7 +14,7 @@ class PlayState extends FlxState
 
 	var bgGradient:FlxSprite;
 	var versionText:FlxText;
-	var cookie:FlxSprite;
+	var quarter:FlxSprite;
 	var moneyText:FlxText;
 	var gear:FlxSprite;
 	var shop:FlxSprite;
@@ -60,18 +60,18 @@ class PlayState extends FlxState
 		versionText.size = 12;
 		add(versionText);
 
-		// add cookie to the screen
-		cookie = new FlxSprite(0, 0, Util.image("quarter"));
-		cookie.x = (FlxG.width - cookie.width) / 2 - 400;
-		cookie.y = (FlxG.height - cookie.height) / 2;
-		cookie.scale.set(2.5, 2.5);
-		cookie.antialiasing = ClientPrefs.antialiasing;
-		add(cookie);
+		// add quarter to the screen
+		quarter = new FlxSprite(0, 0, Util.image("quarter"));
+		quarter.x = (FlxG.width - quarter.width) / 2 - 400;
+		quarter.y = (FlxG.height - quarter.height) / 2;
+		quarter.scale.set(2.5, 2.5);
+		quarter.antialiasing = ClientPrefs.antialiasing;
+		add(quarter);
 
 		// add text to the screen that says how much money you have
 		moneyText = new FlxText(0, 0, FlxG.width, "$0");
-		moneyText.x = cookie.x + 15;
-		moneyText.y = cookie.y - 100;
+		moneyText.x = quarter.x + 15;
+		moneyText.y = quarter.y - 100;
 		moneyText.size = 20;
 		add(moneyText);
 
@@ -134,13 +134,13 @@ class PlayState extends FlxState
 
 		ClientPrefs.saveSettings();
 
-		// if the mouse hovers over the cookie and clicks add money
+		// if the mouse hovers over the quarter and clicks add money
 		if (FlxG.mouse.justPressed)
 		{
-			if (FlxG.mouse.x >= cookie.x
-				&& FlxG.mouse.x <= cookie.x + cookie.width
-				&& FlxG.mouse.y >= cookie.y
-				&& FlxG.mouse.y <= cookie.y + cookie.height)
+			if (FlxG.mouse.x >= quarter.x
+				&& FlxG.mouse.x <= quarter.x + quarter.width
+				&& FlxG.mouse.y >= quarter.y
+				&& FlxG.mouse.y <= quarter.y + quarter.height)
 			{
 				money += moneyPerClick;
 				trace("Click! + " + moneyPerClick);
@@ -178,6 +178,10 @@ class PlayState extends FlxState
 			outdated = !outdated;
 		else if (FlxG.keys.justPressed.C)
 			buildings[0]++;
+
+		// right now the ViewLandState is unused
+		if (FlxG.keys.justPressed.V)
+			FlxG.switchState(new ViewLandState());
 		#end
 
 		// add money per second
