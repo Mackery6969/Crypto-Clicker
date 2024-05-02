@@ -189,6 +189,20 @@ class ViewLandState extends FlxState
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
+			/*
+				var sound = FlxG.sound.play(Util.sound("click"), 0.5);
+				if (ClientPrefs.sound)
+				{
+					// add sound var so we can wait for the sound to finish playing
+					sound.play();
+				}
+				// wait for the sound to finish playing
+				// then switch to the play state
+				if (sound.finished)
+				{
+					FlxG.switchState(new PlayState());
+				}
+			 */
 			FlxG.switchState(new PlayState());
 		}
 
@@ -250,6 +264,9 @@ class ViewLandState extends FlxState
 				}
 			}
 		 */
+
+		if (ClientPrefs.sound)
+			FlxG.sound.play(Util.sound("buy"), 0.5);
 	}
 
 	function updateSelection()

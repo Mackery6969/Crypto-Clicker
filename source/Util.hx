@@ -1,6 +1,7 @@
 package;
 
 import lime.utils.Assets;
+import openfl.utils.Assets;
 
 class Util
 {
@@ -135,8 +136,20 @@ class Util
 	}
 
 	#if desktop
-	public static function error(error:String, name:String) {
+	inline public static function error(error:String, name:String):Void
+	{
 		FlxG.stage.window.alert(error, name);
 	}
 	#end
+
+	inline public static function readFile(path:String):Array<String> // read each line as an element in an array
+	{
+		var file = Assets.getText(path);
+		return file.split('\n');
+	}
+
+	inline public static function video(video:String, folder:String = 'videos')
+	{
+		return file = 'assets/$folder/$video.mp4';
+	}
 }

@@ -1,8 +1,9 @@
 package;
 
+import ClientPrefs;
+import ShowFPS;
 import flixel.FlxGame;
 import openfl.display.Sprite;
-import ClientPrefs;
 
 class Main extends Sprite
 {
@@ -19,7 +20,11 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
+			game.skipSplash, game.startFullscreen));
+
+		if (ClientPrefs.showFPS)
+			addChild(new ShowFPS(10, 3, 0xFFFFFF));
 
 		#if html5
 		ClientPrefs.fullscreen = true;

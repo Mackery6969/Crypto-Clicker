@@ -156,17 +156,24 @@ class PlayState extends FlxState
 				&& FlxG.mouse.y >= quarter.y
 				&& FlxG.mouse.y <= quarter.y + quarter.height)
 			{
+				// play buy.ogg
+				if (ClientPrefs.sound)
+					FlxG.sound.play(Util.sound("buy"), 0.5);
 				money += moneyPerClick;
 				trace("Click! + " + moneyPerClick);
 			}
 			// check for settings button click
 			if (FlxG.mouse.x >= gear.x - 50 && FlxG.mouse.x <= gear.x + gear.width && FlxG.mouse.y >= gear.y && FlxG.mouse.y <= gear.y + gear.height)
 			{
+				if (ClientPrefs.sound)
+					FlxG.sound.play(Util.sound("click"), 0.5);
 				FlxG.switchState(new SettingsState());
 			}
 			// check for shop button click
 			if (FlxG.mouse.x >= shop.x - 50 && FlxG.mouse.x <= shop.x + shop.width && FlxG.mouse.y >= shop.y && FlxG.mouse.y <= shop.y + shop.height)
 			{
+				if (ClientPrefs.sound)
+					FlxG.sound.play(Util.sound("click"), 0.5);
 				// FlxG.switchState(new ShopState());
 			}
 		}
@@ -191,13 +198,6 @@ class PlayState extends FlxState
 			// they will be taken to the game over screen
 			// the game over screen will show how much money they made overall
 			inDebt = true;
-			FlxG.sound.music.pause();
-		}
-		else
-		{
-			moneyText.color = 0xFFFFFF;
-			inDebt = false;
-			FlxG.sound.music.resume();
 		}
 
 		#if debug

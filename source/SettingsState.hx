@@ -12,10 +12,13 @@ class SettingsState extends FlxState
 	var fpsMenuText:FlxText;
 
 	var fps:Int = 60;
+	var showFPS:Bool = false;
+	var reloadRequired:Bool = false;
 
 	override public function create()
 	{
 		fps = ClientPrefs.framerate;
+		showFPS = ClientPrefs.showFPS;
 
 		super.create();
 
@@ -160,6 +163,7 @@ class SettingsState extends FlxState
 			{
 				showFPSText.text = "Show FPS: FALSE";
 			}
+			// check if it has changed from its previous value
 		});
 		showFPSButton.y = showFPSText.y + showFPSText.height + 10;
 		showFPSButton.x = FlxG.width / 2 - showFPSButton.width / 2 + 400;
@@ -269,7 +273,8 @@ class SettingsState extends FlxState
 		resetSettingsText.x = FlxG.width / 2 - resetSettingsText.width / 2 + 320;
 		add(resetSettingsText);
 
-		var resetSettingsButton = new FlxButton(0, 0, function() {
+		var resetSettingsButton = new FlxButton(0, 0, function()
+		{
 			trace("Resetting Settings...");
 			ClientPrefs.resetSettings("settings");
 			FlxG.switchState(new SettingsState());
@@ -286,7 +291,8 @@ class SettingsState extends FlxState
 		resetGameSaveText.x = FlxG.width / 2 - resetSettingsText.width / 2 + 520;
 		add(resetGameSaveText);
 
-		var resetGameSaveButton = new FlxButton(0, 0, function() {
+		var resetGameSaveButton = new FlxButton(0, 0, function()
+		{
 			trace("Resetting Game Data...");
 			ClientPrefs.resetSettings("game");
 			FlxG.switchState(new SettingsState());
@@ -341,11 +347,20 @@ class SettingsState extends FlxState
 			}
 			else if (FlxG.keys.justPressed.ESCAPE)
 			{
-				fpsMenu = false;
-				closeFPSMenu();
+				if (fpsMenu)
+				{
+					fpsMenu = false;
+					closeFPSMenu();
 
-				trace("FPS Unchanged");
-				fps = ClientPrefs.framerate;
+					trace("FPS Unchanged");
+					fps = ClientPrefs.framerate;
+				}
+				else
+				{
+					ClientPrefs.saveSettings();
+					trace("Settings Saved!");
+					FlxG.switchState(new PlayState());
+				}
 			}
 			else if (FlxG.keys.justPressed.LEFT)
 			{
