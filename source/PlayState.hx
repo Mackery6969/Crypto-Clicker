@@ -15,13 +15,22 @@ class PlayState extends FlxState
 	static var outdated:Bool = false; // for version checker
 
 	var bgGradient:FlxSprite;
+	var gridOne:FlxSprite;
+	var scrollingGrid:FlxSprite;
 	var versionText:FlxText;
 	var quarter:FlxSprite;
 	var moneyText:FlxText;
 	var gear:FlxSprite;
 	var shop:FlxSprite;
-	var updateButton:FlxSprite;
+	var atlasEarth:FlxSprite;
 	var computers:FlxText; // flxtext for placeholder
+
+	var gridHeight:Float;
+	var gridWidth:Float;
+	var scrollingGrids:Array<FlxSprite> = new Array<FlxSprite>();
+	var numScrollingGridsX:Int;
+	var numScrollingGridsY:Int;
+	var scrollSpeed:Float = 25;
 
 	public static var money:Float = 0;
 	public static var moneyPerClick:Float = 0.25;
@@ -59,6 +68,41 @@ class PlayState extends FlxState
 		bgGradient.y = -400;
 		bgGradient.antialiasing = ClientPrefs.antialiasing;
 		add(bgGradient);
+
+		// add gridOne
+		gridOne = new FlxSprite(0, 0, Util.image("LuigiGrid"));
+		// gridOne.scale.set(0.5, 0.5);
+		gridOne.antialiasing = ClientPrefs.antialiasing;
+		gridOne.alpha = 0.5;
+		add(gridOne);
+
+		// Create a temporary sprite to load the image and get its dimensions
+		var tempSprite = new FlxSprite();
+		tempSprite.loadGraphic(Util.image("LuigiGrid"), false, false);
+		gridHeight = tempSprite.height;
+		gridWidth = tempSprite.width;
+
+		// Calculate the number of grids needed to fill the screen
+		numScrollingGridsY = Math.ceil(FlxG.height / gridHeight) + 1;
+		numScrollingGridsX = Math.ceil(FlxG.width / gridWidth) + 1;
+
+		// Create and position the grid sprites
+		scrollingGrids = new Array<FlxSprite>();
+		for (i in 0...numScrollingGridsY)
+		{
+			for (j in 0...numScrollingGridsX)
+			{
+				var grid = new FlxSprite();
+				grid.loadGraphic(Util.image("LuigiGrid"), false, false);
+				grid.x = -gridWidth * j;
+				grid.y = -gridHeight * i;
+				grid.antialiasing = ClientPrefs.antialiasing;
+
+				// Add the grid to the display list and the scrollingGrids array
+				add(grid);
+				scrollingGrids.push(grid);
+			}
+		}
 
 		// add version text at the bottom left corner
 		versionText = new FlxText(0, 0, FlxG.width, version);
@@ -98,6 +142,14 @@ class PlayState extends FlxState
 		shop.antialiasing = ClientPrefs.antialiasing;
 		add(shop);
 
+		// add the Atlas Earth button below the shop button
+		atlasEarth = new FlxSprite(0, 0, Util.image("AtlasEarth"));
+		atlasEarth.x = FlxG.width - atlasEarth.width + 75;
+		atlasEarth.y = shop.y + shop.height - 125;
+		atlasEarth.scale.set(0.3, 0.3);
+		atlasEarth.antialiasing = ClientPrefs.antialiasing;
+		add(atlasEarth);
+
 		// add placeholder for computers
 		computers = new FlxText(0, 0, FlxG.width, "Computers:" + buildings[0]);
 		// center of the screen
@@ -118,6 +170,23 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		// Scroll each tile diagonally across the screen
+		for (tile in scrollingGrids)
+		{
+			tile.x -= scrollSpeed * elapsed;
+			tile.y += scrollSpeed * elapsed;
+
+			// If the tile has gone off the bottom or left of the screen, move it back to the top right
+			if (tile.y >= FlxG.height)
+			{
+				tile.y -= tile.height * numScrollingGridsY;
+			}
+			if (tile.x <= -tile.width)
+			{
+				tile.x += tile.width * numScrollingGridsX;
+			}
+		}
 
 		// loop the music
 		if (FlxG.sound.music != null && !FlxG.sound.music.active && ClientPrefs.music)
@@ -172,6 +241,16 @@ class PlayState extends FlxState
 					FlxG.sound.play(Util.sound("click"), 0.5);
 				// FlxG.switchState(new ShopState());
 			}
+			// check for atlas earth button click
+			if (FlxG.mouse.x >= atlasEarth.x - 50
+				&& FlxG.mouse.x <= atlasEarth.x + atlasEarth.width
+				&& FlxG.mouse.y >= atlasEarth.y
+				&& FlxG.mouse.y <= atlasEarth.y + atlasEarth.height)
+			{
+				if (ClientPrefs.sound)
+					FlxG.sound.play(Util.sound("click"), 0.5);
+				FlxG.switchState(new ViewLandState());
+			}
 		}
 
 		#if sys
@@ -206,10 +285,6 @@ class PlayState extends FlxState
 			money += 10;
 		else if (FlxG.keys.justPressed.MINUS)
 			money -= 10;
-		else if (FlxG.keys.justPressed.V)
-			FlxG.switchState(new ViewLandState());
-		else if (FlxG.keys.justPressed.K)
-			FlxG.switchState(new KilidoorBossState());
 		#end
 
 		// add money per second

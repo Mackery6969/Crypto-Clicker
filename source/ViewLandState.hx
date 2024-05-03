@@ -33,6 +33,14 @@ class ViewLandState extends FlxState
 	// you can add buildings thats in your inventory to the tiles to make them generate money for you
 	// you can buy tiles in all 8 directions from your claimed ones
 	var bgGradient:FlxSprite;
+	var gridOne:FlxSprite;
+	var gridHeight:Float;
+	var gridWidth:Float;
+	var numScrollingGridsX:Int;
+	var numScrollingGridsY:Int;
+	var scrollingGrids:Array<FlxSprite>;
+
+	var scrollSpeed:Float = 25;
 
 	public static var lands:Array<Land>;
 
@@ -61,6 +69,43 @@ class ViewLandState extends FlxState
 		bgGradient.antialiasing = ClientPrefs.antialiasing;
 		bgGradient.scrollFactor.set(0, 0);
 		add(bgGradient);
+
+		// add gridOne
+		gridOne = new FlxSprite(0, 0, Util.image("LuigiGrid"));
+		// gridOne.scale.set(0.5, 0.5);
+		gridOne.antialiasing = ClientPrefs.antialiasing;
+		gridOne.alpha = 0.5;
+		gridOne.scrollFactor.set(0, 0);
+		add(gridOne);
+
+		// Create a temporary sprite to load the image and get its dimensions
+		var tempSprite = new FlxSprite();
+		tempSprite.loadGraphic(Util.image("LuigiGrid"), false, false);
+		gridHeight = tempSprite.height;
+		gridWidth = tempSprite.width;
+
+		// Calculate the number of grids needed to fill the screen
+		numScrollingGridsY = Math.ceil(FlxG.height / gridHeight) + 1;
+		numScrollingGridsX = Math.ceil(FlxG.width / gridWidth) + 1;
+
+		// Create and position the grid sprites
+		scrollingGrids = new Array<FlxSprite>();
+		for (i in 0...numScrollingGridsY)
+		{
+			for (j in 0...numScrollingGridsX)
+			{
+				var grid = new FlxSprite();
+				grid.loadGraphic(Util.image("LuigiGrid"), false, false);
+				grid.x = -gridWidth * j;
+				grid.y = -gridHeight * i;
+				grid.antialiasing = ClientPrefs.antialiasing;
+				grid.scrollFactor.set(0, 0);
+
+				// Add the grid to the display list and the scrollingGrids array
+				add(grid);
+				scrollingGrids.push(grid);
+			}
+		}
 
 		// adds a red background as a border behind the tiles
 		var bg = new FlxSprite(171, 171);
@@ -142,6 +187,22 @@ class ViewLandState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		for (tile in scrollingGrids)
+		{
+			tile.x -= scrollSpeed * elapsed;
+			tile.y += scrollSpeed * elapsed;
+
+			// If the tile has gone off the bottom or left of the screen, move it back to the top right
+			if (tile.y >= FlxG.height)
+			{
+				tile.y -= tile.height * numScrollingGridsY;
+			}
+			if (tile.x <= -tile.width)
+			{
+				tile.x += tile.width * numScrollingGridsX;
+			}
+		}
 
 		// check if the player clicks on a tile
 		// opens a sub menu where the player can choose to buy/sell a tile
