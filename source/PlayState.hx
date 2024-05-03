@@ -1,5 +1,6 @@
 package;
 
+import SoundTest;
 import flash.display.GradientType;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -31,10 +32,6 @@ class PlayState extends FlxState
 	public static var kilidoorDefeated:Bool = false;
 
 	var moneyShownAsText:Float = 0;
-	// make an array for the correct keys to be pressed (konomi code) in order
-	var easterEggKeys:Array<String> = ['KILDARE', 'NEIL'];
-	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	var easterEggKeysBuffer:String = '';
 
 	override public function create()
 	{
@@ -225,40 +222,9 @@ class PlayState extends FlxState
 			moneyPerSecond = buildings[0] * 0.001;
 		}
 
-		// check if the konomi code is pressed
-		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) // thx psych engine
+		if (FlxG.keys.justPressed.F1)
 		{
-			var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
-			var keyName:String = Std.string(keyPressed);
-			if (allowedKeys.contains(keyName))
-			{
-				easterEggKeysBuffer += keyName;
-				if (easterEggKeysBuffer.length >= 32)
-					easterEggKeysBuffer = easterEggKeysBuffer.substring(1);
-
-				for (wordRaw in easterEggKeys)
-				{
-					var word:String = wordRaw.toUpperCase(); // just for being sure you're doing it right
-					if (easterEggKeysBuffer.contains(word))
-					{
-						// trace('YOOO! ' + word);
-						switch (word)
-						{
-							case 'KILDARE':
-								#if desktop
-								Util.error("Nice Try", "Kildare");
-								#if sys
-								Sys.exit(1);
-								#end
-								#end
-							case 'NEIL':
-								#if desktop
-								Util.error("Im not ready yet.", "Try Again Another Update..");
-								#end
-						}
-					}
-				}
-			}
+			FlxG.switchState(new SoundTest());
 		}
 	}
 }
