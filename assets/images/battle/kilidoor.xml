@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="kilidoor fight sprites.png">
+	<!-- Created with Adobe Animate version 23.0.2.103 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name=":)0000" x="0" y="0" width="215" height="262"/>
+	<SubTexture name=":P0000" x="215" y="0" width="215" height="262"/>
+	<SubTexture name=">:30000" x="430" y="0" width="215" height="262"/>
+	<SubTexture name="XD0000" x="645" y="0" width="215" height="262"/>
+	<SubTexture name="anger0000" x="0" y="262" width="215" height="262"/>
+	<SubTexture name="error0000" x="215" y="262" width="216" height="263"/>
+	<SubTexture name="idler0000" x="431" y="262" width="215" height="262"/>
+	<SubTexture name="sad0000" x="646" y="262" width="215" height="262"/>
+</TextureAtlas>

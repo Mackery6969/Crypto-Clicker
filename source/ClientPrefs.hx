@@ -24,7 +24,7 @@ class ClientPrefs
 
 	// saved stuff (non option related)
 	// stuff soon xD
-	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick", "lands", "inDebt"];
+	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick", "lands", "inDebt", "kilidoorDefeated"];
 
 	public static function saveSettings()
 	{
@@ -49,6 +49,7 @@ class ClientPrefs
 		saveData.data.moneyPerClick = PlayState.moneyPerClick;
 		saveData.data.inDebt = PlayState.inDebt;
 		saveData.data.lands = ViewLandState.lands;
+		saveData.data.kilidoorDefeated = PlayState.kilidoorDefeated;
 		saveData.flush();
 		saveData.destroy();
 	}
@@ -113,6 +114,10 @@ class ClientPrefs
 		if (Reflect.hasField(FlxG.save.data, "lands"))
 		{
 			ViewLandState.lands = Reflect.field(FlxG.save.data, "lands");
+		}
+		if (Reflect.hasField(FlxG.save.data, "kilidoorDefeated"))
+		{
+			PlayState.kilidoorDefeated = Reflect.field(FlxG.save.data, "kilidoorDefeated");
 		}
 
 		FlxG.save.flush();

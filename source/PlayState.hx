@@ -28,6 +28,8 @@ class PlayState extends FlxState
 	public static var buildings:Array<Int> = [0];
 	public static var inDebt:Bool = false;
 
+	public static var kilidoorDefeated:Bool = false;
+
 	var moneyShownAsText:Float = 0;
 	// make an array for the correct keys to be pressed (konomi code) in order
 	var easterEggKeys:Array<String> = ['KILDARE', 'NEIL'];
@@ -140,10 +142,7 @@ class PlayState extends FlxState
 
 		// update the text to show how much money you have
 		// this is done every frame
-		if (money > 0)
-			moneyShownAsText = Util.roundToInterval(money, 0.25);
-		else
-			moneyShownAsText = Util.round(money, 2); // i want it to show how much money you are in debt
+		moneyShownAsText = Util.round(money, 3); // i want it to show how much money you are in debt
 		moneyText.text = '$' + moneyShownAsText;
 
 		ClientPrefs.saveSettings();
@@ -212,6 +211,8 @@ class PlayState extends FlxState
 			money -= 10;
 		else if (FlxG.keys.justPressed.V)
 			FlxG.switchState(new ViewLandState());
+		else if (FlxG.keys.justPressed.K)
+			FlxG.switchState(new KilidoorBossState());
 		#end
 
 		// add money per second

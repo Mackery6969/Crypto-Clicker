@@ -2,6 +2,7 @@ package;
 
 import lime.utils.Assets;
 import openfl.utils.Assets;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 class Util
 {
@@ -151,5 +152,10 @@ class Util
 	inline public static function video(video:String, folder:String = 'videos')
 	{
 		return file = 'assets/$folder/$video.mp4';
+	}
+
+	inline public static function sparrowAtlas(path:String, folder:String = 'images')
+	{
+		return FlxAtlasFrames.fromSparrow('assets/$folder/$path.png', 'assets/$folder/$path.xml');
 	}
 }
