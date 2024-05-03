@@ -29,6 +29,7 @@ class SoundTest extends FlxState
 		bufferText = new FlxText(0, 0, FlxG.width, buffer);
 		bufferText.setFormat(null, 8, 0xFFFFFFFF, "center");
 		bufferText.y = 70;
+		add(bufferText);
 	}
 
 	override public function update(elapsed:Float)
@@ -81,12 +82,10 @@ class SoundTest extends FlxState
 									#end
 								}
 								#end
-								resetCode();
 							case 'NEIL':
 								#if desktop
 								Util.error("Im not ready yet.", "Try Again Another Update..");
 								#end
-								resetCode();
 							case 'RCM':
 								if (!PlayState.kilidoorDefeated)
 								{
@@ -95,10 +94,12 @@ class SoundTest extends FlxState
 								else
 								{
 									Util.openURL("https://www.youtube.com/channel/UCPHqigpuJLO6dWC0hzpBBTA");
+									#if desktop
 									Util.error("I'm not continuing this yet.", "check again another update.");
+									#end
 								}
-								resetCode();
 						}
+						resetCode();
 					}
 				}
 			}
