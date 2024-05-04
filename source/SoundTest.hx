@@ -25,18 +25,11 @@ class SoundTest extends FlxState
 		enterText.setFormat(null, 16, 0xFFFFFFFF, "center");
 		enterText.y = 50;
 		add(enterText);
-
-		bufferText = new FlxText(0, 0, FlxG.width, buffer);
-		bufferText.setFormat(null, 8, 0xFFFFFFFF, "center");
-		bufferText.y = 70;
-		add(bufferText);
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
-		bufferText.text = buffer;
 
 		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) // thx psych engine
 		{
@@ -57,34 +50,18 @@ class SoundTest extends FlxState
 						switch (word)
 						{
 							case 'KILDARE':
-								FlxG.sound.music.stop();
+								// FlxG.sound.music.stop();
 								#if debug
-								#if desktop
-								Util.error("all you players are the same", "you all want the same thing");
-								Util.error("you want to be the best", "you want to be the best");
-								Util.error("I wont let you do that", "fight me");
-								#end
 								FlxG.switchState(new KilidoorBossState());
 								#else
 								if (!PlayState.kilidoorDefeated)
 								{
-									#if desktop
-									Util.error("all you players are the same", "you all want the same thing");
-									Util.error("you want to be the best", "you want to be the best");
-									Util.error("I wont let you do that", "fight me");
-									#end
 									FlxG.switchState(new KilidoorBossState());
 								}
 								else
 								{
-									#if desktop
-									Util.error("Sound, Sound! Somethings up with killdare!", "Please.");
-									#end
+									trace("Kilidoor already defeated");
 								}
-								#end
-							case 'NEIL':
-								#if desktop
-								Util.error("Im not ready yet.", "Try Again Another Update..");
 								#end
 							case 'RCM':
 								if (!PlayState.kilidoorDefeated)
@@ -94,9 +71,6 @@ class SoundTest extends FlxState
 								else
 								{
 									Util.openURL("https://www.youtube.com/channel/UCPHqigpuJLO6dWC0hzpBBTA");
-									#if desktop
-									Util.error("I'm not continuing this yet.", "check again another update.");
-									#end
 								}
 						}
 						resetCode();

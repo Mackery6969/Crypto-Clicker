@@ -193,11 +193,7 @@ class KilidoorBossState extends FlxState
 		{
 			noiseStatic.alpha = 1;
 			loopStatic = true;
-			#if desktop
-			Util.error("ERROR\nPLEASE TRY AGAIN LATER.", "...");
-			#else
 			trace("no");
-			#end
 			(new FlxTimer()).start(5, function(timer:FlxTimer)
 			{
 				loopStatic = false;
