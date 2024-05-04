@@ -38,8 +38,6 @@ class PlayState extends FlxState
 	public static var buildings:Array<Int> = [0];
 	public static var inDebt:Bool = false;
 
-	public static var kilidoorDefeated:Bool = false;
-
 	var moneyShownAsText:Float = 0;
 
 	override public function create()

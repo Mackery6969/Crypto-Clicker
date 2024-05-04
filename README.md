@@ -24,7 +24,6 @@ lol
 ## Credits
 - Mackery
 - Ronezjk15 (maker of Raldi)
-- kilidarewasbanned/Snowy (kilidoor)
 - 504Brandon (borrowed code)
 - Srt (borrowed code)
 - Leather128 (borrowed code)

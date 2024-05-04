@@ -1,6 +1,5 @@
 package;
 
-import KilidoorBossState;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 
@@ -8,7 +7,7 @@ class SoundTest extends FlxState
 {
 	var bufferText:FlxText;
 
-	var validCodes:Array<String> = ['KILDARE', 'NEIL', 'RCM'];
+	var validCodes:Array<String> = ['NEIL', 'RCM'];
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var buffer:String = '';
 
@@ -49,29 +48,8 @@ class SoundTest extends FlxState
 						// trace('YOOO! ' + word);
 						switch (word)
 						{
-							case 'KILDARE':
-								// FlxG.sound.music.stop();
-								#if debug
-								FlxG.switchState(new KilidoorBossState());
-								#else
-								if (!PlayState.kilidoorDefeated)
-								{
-									FlxG.switchState(new KilidoorBossState());
-								}
-								else
-								{
-									trace("Kilidoor already defeated");
-								}
-								#end
 							case 'RCM':
-								if (!PlayState.kilidoorDefeated)
-								{
-									Util.openURL("https://youtu.be/_x3Ftu6iZq0");
-								}
-								else
-								{
-									Util.openURL("https://www.youtube.com/channel/UCPHqigpuJLO6dWC0hzpBBTA");
-								}
+								Util.openURL("https://youtu.be/_x3Ftu6iZq0");
 						}
 						resetCode();
 					}
