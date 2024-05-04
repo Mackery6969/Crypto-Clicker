@@ -260,6 +260,7 @@ class PlayState extends FlxState
 					FlxG.sound.music.stop();
 					FlxG.sound.music = null;
 				}
+				// 1 in 15 chance to play atlas earth ad
 				FlxG.switchState(new ViewLandState());
 			}
 		}
