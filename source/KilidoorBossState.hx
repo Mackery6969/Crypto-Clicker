@@ -1,6 +1,7 @@
 package;
 
 /* undertale like fight, only option that works is Fight. */
+// gonna be removed soon, snowy asked for its deletion.
 import flixel.ui.FlxBar;
 
 class KilidoorBossState extends FlxState
@@ -50,7 +51,7 @@ class KilidoorBossState extends FlxState
 		add(kilidoor);
 
 		kilidoorHPBar = new FlxBar(0, 0, LEFT_TO_RIGHT, 100, 10, kilidoor, "health", 0, kilidoorMaxHP, true);
-		kilidoorHPBar.createFilledBar(0xff00ff00, 0xffA9A9A9);
+		kilidoorHPBar.createFilledBar(0xffff0000, 0xffA9A9A9);
 		kilidoorHPBar.x = FlxG.width / 2 - kilidoorHPBar.width / 2;
 		// bar is 10 pixels above kilidoor
 		kilidoorHPBar.y = kilidoor.y - 10 - kilidoorHPBar.height;
@@ -97,7 +98,7 @@ class KilidoorBossState extends FlxState
 		add(mercyButton);
 
 		playerHPBar = new FlxBar(0, 0, LEFT_TO_RIGHT, 100, 10, this, "playerHP", 0, playerMaxHP, true);
-		playerHPBar.createFilledBar(0xff00ff00, 0xffA9A9A9);
+		playerHPBar.createFilledBar(0xffA9A9A9, 0xff00ff00);
 		playerHPBar.x = FlxG.width / 2 - playerHPBar.width / 2;
 		playerHPBar.y = mercyButton.y - 15 - playerHPBar.height;
 		add(playerHPBar);
@@ -149,7 +150,7 @@ class KilidoorBossState extends FlxState
 			kilidoorHPText.kill();
 			// kilidoor is dead, player wins
 
-			Util.openURL("https://discord.gg/bzYqGHqvrS"); // kilidoor discord link
+			// Util.openURL("https://discord.gg/bzYqGHqvrS"); // kilidoor discord link
 			// make the dialogue text say something else
 
 			dialogueText.text = "YOU WON!\nyou got 0 exp and 1 gold.";
