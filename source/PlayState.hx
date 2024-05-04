@@ -40,6 +40,8 @@ class PlayState extends FlxState
 
 	var moneyShownAsText:Float = 0;
 
+	static var songPosition:Float = 0;
+
 	override public function create()
 	{
 		// Load Data
@@ -158,16 +160,19 @@ class PlayState extends FlxState
 		add(computers);
 
 		// play the menu music
-		if (ClientPrefs.music && FlxG.sound.music == null)
-		{
-			FlxG.sound.playMusic(Util.music("menu"), 0.5);
-			FlxG.sound.music.volume = 0.75;
-		}
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if (ClientPrefs.music && FlxG.sound.music == null)
+		{
+			FlxG.sound.playMusic(Util.music("menu"), 0.5, true);
+			FlxG.sound.music.play();
+			if (songPosition != 0)
+				FlxG.sound.music.time = songPosition;
+		}
 
 		// Scroll each tile diagonally across the screen
 		for (tile in scrollingGrids)
@@ -186,9 +191,11 @@ class PlayState extends FlxState
 			}
 		}
 
-		// loop the music
-		if (FlxG.sound.music != null && !FlxG.sound.music.active && ClientPrefs.music)
-			FlxG.sound.playMusic(Util.music("menu"), 0.5);
+		/*
+			// loop the music
+			if (FlxG.sound.music != null && !FlxG.sound.music.active && ClientPrefs.music)
+				FlxG.sound.playMusic(Util.music("menu"), 0.5);
+		 */
 
 		if (FlxG.sound.music != null)
 		{
@@ -247,6 +254,12 @@ class PlayState extends FlxState
 			{
 				if (ClientPrefs.sound)
 					FlxG.sound.play(Util.sound("click"), 0.5);
+				if (FlxG.sound.music != null)
+				{
+					songPosition = FlxG.sound.music.time;
+					FlxG.sound.music.stop();
+					FlxG.sound.music = null;
+				}
 				FlxG.switchState(new ViewLandState());
 			}
 		}

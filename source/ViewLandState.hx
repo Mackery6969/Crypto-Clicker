@@ -54,6 +54,8 @@ class ViewLandState extends FlxState
 	var landSellMinPrice:Float = 50;
 	var landSellMaxPrice:Float = 500;
 
+	static var songPosition:Float = 0;
+
 	override public function create()
 	{
 		ClientPrefs.loadSettings();
@@ -182,11 +184,24 @@ class ViewLandState extends FlxState
 				}
 			}
 		}
+
+		if (ClientPrefs.music && FlxG.sound.music == null)
+		{
+			FlxG.sound.playMusic(Util.music("AtlasEarth"), 0.5, true);
+			FlxG.sound.music.play();
+			if (songPosition != 0)
+				FlxG.sound.music.time = songPosition;
+		}
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		/*
+			if (FlxG.sound.music != null && !FlxG.sound.music.active && ClientPrefs.music)
+				FlxG.sound.playMusic(Util.music("AtlasEarth"), 0.5);
+		 */
 
 		for (tile in scrollingGrids)
 		{
@@ -261,9 +276,20 @@ class ViewLandState extends FlxState
 				// then switch to the play state
 				if (sound.finished)
 				{
+					if (FlxG.sound.music != null)
+					{
+						songPosition = FlxG.sound.music.time;
+						FlxG.sound.music.pause();
+					}
 					FlxG.switchState(new PlayState());
 				}
 			 */
+			if (FlxG.sound.music != null)
+			{
+				songPosition = FlxG.sound.music.time;
+				FlxG.sound.music.stop();
+				FlxG.sound.music = null;
+			}
 			FlxG.switchState(new PlayState());
 		}
 
