@@ -23,6 +23,7 @@ lol
 
 ## Credits
 - Mackery
+- Somi (Beta Tester + help)
 - Ronezjk15 (maker of Raldi)
 - 504Brandon (borrowed code)
 - Srt (borrowed code)
