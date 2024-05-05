@@ -354,6 +354,10 @@ class SettingsState extends FlxState
 	{
 		super.update(elapsed);
 
+		#if discord_rpc
+		DiscordHandler.changePresence("In the menus...", "SettingsState");
+		#end
+
 		if (FlxG.mouse.justPressed || FlxG.keys.justPressed.ESCAPE)
 		{
 			if (FlxG.mouse.x >= backArrow.x

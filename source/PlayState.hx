@@ -39,6 +39,8 @@ class PlayState extends FlxState
 	public static var buildings:Array<Int> = [0];
 	public static var inDebt:Bool = false;
 
+	public static var discordClient:String = "1192243967002165320";
+
 	var moneyShownAsText:Float = 0;
 
 	static var songPosition:Float = 0;
@@ -216,6 +218,10 @@ class PlayState extends FlxState
 			else
 				FlxG.sound.music.play();
 		}
+
+		#if discord_rpc
+		DiscordHandler.changePresence('The Metaverse\n$' + money + ', +$' + moneyPerSecond + '/s', 'PlayState');
+		#end
 
 		if (outdated)
 		{

@@ -79,6 +79,11 @@ class LandOptionsState extends FlxState
 	{
 		super.update(elapsed);
 
+		#if discord_rpc
+		DiscordHandler.changePresence("Using Atlas Earth\n" + ViewLandState.ownedLand + ' / ' + ViewLandState.lands.length + ' tiles owned',
+			"LandOptionsState");
+		#end
+
 		if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.SPACE)
 		{
 			if (ClientPrefs.sound)

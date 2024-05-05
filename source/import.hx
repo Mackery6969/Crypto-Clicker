@@ -1,7 +1,6 @@
 import ClientPrefs;
 import PlayState;
 import ShowFPS;
-import Sys;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -26,6 +25,13 @@ import flixel.util.FlxTimer;
 // import important states/classes
 // import sys
 using StringTools;
+
+#if desktop
+import Sys;
+#end
+#if discord_rpc
+import DiscordHandler;
+#end
 
 /*
 	#if sys

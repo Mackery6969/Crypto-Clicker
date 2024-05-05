@@ -54,6 +54,8 @@ class ViewLandState extends FlxState
 	var landSellMinPrice:Float = 50;
 	var landSellMaxPrice:Float = 500;
 
+	public static var ownedLand:Int = 0;
+
 	static var songPosition:Float = 0;
 
 	override public function create()
@@ -194,11 +196,24 @@ class ViewLandState extends FlxState
 			if (songPosition != 0)
 				FlxG.sound.music.time = songPosition;
 		}
+
+		// update owned land count
+		for (land in lands)
+		{
+			if (land.owned)
+			{
+				ownedLand++;
+			}
+		}
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		#if discord_rpc
+		DiscordHandler.changePresence("Using Atlas Earth\n" + ownedLand + ' / ' + lands.length + ' tiles owned', "ViewLandState");
+		#end
 
 		/*
 			if (FlxG.sound.music != null && !FlxG.sound.music.active && ClientPrefs.music)
@@ -336,9 +351,8 @@ class ViewLandState extends FlxState
 
 		// save the lands array to the save file
 		ClientPrefs.saveSettings();
-	}
+	} // buy land
 
-	// buy land
 	public static function buyLand(land:Land)
 	{
 		land.owned = true;

@@ -30,6 +30,10 @@ class SoundTest extends FlxState
 	{
 		super.update(elapsed);
 
+		#if discord_rpc
+		DiscordHandler.changePresence('SPOILERS :)', "SoundTest");
+		#end
+
 		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) // thx psych engine
 		{
 			var keyPressed:FlxKey = FlxG.keys.firstJustPressed();

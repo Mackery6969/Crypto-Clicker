@@ -39,6 +39,7 @@ jobs:
           haxelib install flixel-ui
           haxelib install flixel-addons
           haxelib install hxcpp-debug-server
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
@@ -121,6 +122,7 @@ jobs:
           haxelib install flixel-ui
           haxelib install flixel-addons
           haxelib git openfl https://github.com/openfl/openfl
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib install hxcpp-debug-server
           haxelib list
         shell: cmd
@@ -163,6 +165,7 @@ jobs:
           haxelib install flixel-ui
           haxelib install flixel-addons
           haxelib git openfl https://github.com/openfl/openfl
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib install hxcpp-debug-server
           haxelib list
       - name: Create Version Tag

@@ -31,6 +31,12 @@ class Main extends Sprite
 		ClientPrefs.autoPause = FlxG.mouse.visible = false;
 		#end
 
+		#if discord_rpc
+		DiscordHandler.initialize();
+		#end
+
+		trace(PlayState.discordClient);
+
 		if (ClientPrefs.reloadRequired)
 		{
 			ClientPrefs.reloadRequired = false;
