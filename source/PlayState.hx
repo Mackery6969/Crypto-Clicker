@@ -39,11 +39,19 @@ class PlayState extends FlxState
 	public static var buildings:Array<Int> = [0];
 	public static var inDebt:Bool = false;
 
+	var canInteract:Bool = true;
+
 	public static var discordClient:String = "1192243967002165320";
 
 	var moneyShownAsText:Float = 0;
 
 	static var songPosition:Float = 0;
+	public static var musicCanPlay:Bool = true;
+
+	#if hxCodec
+	var atlasAd:FlxVideo;
+	var atlasAdPlaying:Bool = false;
+	#end
 
 	override public function create()
 	{
@@ -174,13 +182,18 @@ class PlayState extends FlxState
 		add(computers);
 
 		// play the menu music
+
+		#if hxCodec
+		atlasAd = new FlxVideo();
+		atlasAd.onEndReached.add(atlasAd.dispose);
+		#end
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if (ClientPrefs.music && FlxG.sound.music == null)
+		if (ClientPrefs.music && FlxG.sound.music == null && musicCanPlay)
 		{
 			FlxG.sound.playMusic(Util.music("menu"), 0.5, true);
 			FlxG.sound.music.play();
@@ -240,7 +253,7 @@ class PlayState extends FlxState
 		ClientPrefs.saveSettings();
 
 		// if the mouse hovers over the quarter and clicks add money
-		if (FlxG.mouse.justPressed)
+		if (FlxG.mouse.justPressed && canInteract)
 		{
 			if (FlxG.mouse.x >= quarter.x
 				&& FlxG.mouse.x <= quarter.x + quarter.width
@@ -275,6 +288,7 @@ class PlayState extends FlxState
 			{
 				if (ClientPrefs.sound)
 					FlxG.sound.play(Util.sound("click"), 0.5);
+				musicCanPlay = false;
 				if (FlxG.sound.music != null)
 				{
 					songPosition = FlxG.sound.music.time;
@@ -282,13 +296,49 @@ class PlayState extends FlxState
 					FlxG.sound.music = null;
 				}
 				// 1 in 15 chance to play atlas earth ad
-				FlxG.switchState(new ViewLandState());
+				#if hxCodec
+				#if debug
+				// Play the ad
+				trace("Playing ad");
+				atlasAdPlaying = true;
+				atlasAd.play(Util.video("atlas"));
+				// Wait for the ad to finish
+				// Then switch to the atlas earth state
+				atlasAd.onEndReached.add(function()
+				{
+					trace("Ad finished");
+					atlasAdPlaying = false;
+					canInteract = true;
+					FlxG.switchState(new ViewLandState());
+				});
+				#else
+				if (Math.random() < 0.06666666666666667)
+				{
+					// Play the ad
+					trace("Playing ad");
+					atlasAd.play(Util.video("atlas"));
+					// Wait for the ad to finish
+					// Then switch to the atlas earth state
+					atlasAd.onEndReached.add(function()
+					{
+						trace("Ad finished");
+						atlasAdPlaying = false;
+						canInteract = true;
+						FlxG.switchState(new ViewLandState());
+					});
+				}
+				else
+				{
+					FlxG.switchState(new ViewLandState());
+				}
+				#end
+				#end
 			}
 		}
 
 		#if sys
 		// close the game if escape is pressed
-		if (FlxG.keys.justPressed.ESCAPE)
+		if (FlxG.keys.justPressed.ESCAPE && canInteract)
 		{
 			trace("Bye!");
 			Sys.exit(1);
@@ -324,13 +374,34 @@ class PlayState extends FlxState
 		// every second
 		money += moneyPerSecond * elapsed;
 
+		#if hxCodec
+		if (atlasAdPlaying)
+		{
+			musicCanPlay = false;
+			canInteract = false;
+			// pause the music if its playing
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.pause();
+
+			#if debug
+			if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.BACKSPACE) // its gonna trace a bunch of errors idk how to fix lol
+			{
+				atlasAdPlaying = false;
+				atlasAd.stop();
+				atlasAd.dispose();
+				FlxG.switchState(new ViewLandState());
+			}
+			#end
+		}
+		#end
+
 		if (buildings[0] > 0)
 		{
 			computers.visible = true;
 			moneyPerSecond = buildings[0] * 0.001;
 		}
 
-		if (FlxG.keys.justPressed.F1)
+		if (FlxG.keys.justPressed.F1 && canInteract)
 		{
 			FlxG.switchState(new SoundTest());
 		}

@@ -48,6 +48,7 @@
 	<!--<haxelib name="nape-haxe4" />-->
 
 	<haxelib name="discord_rpc" if="desktop"/>
+	<haxelib name="hxCodec" if="desktop || android" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

@@ -61,6 +61,7 @@ class ViewLandState extends FlxState
 	override public function create()
 	{
 		ClientPrefs.loadSettings();
+		PlayState.musicCanPlay = true;
 
 		super.create();
 
@@ -189,7 +190,7 @@ class ViewLandState extends FlxState
 			}
 		}
 
-		if (ClientPrefs.music && FlxG.sound.music == null)
+		if (ClientPrefs.music && FlxG.sound.music == null && PlayState.musicCanPlay)
 		{
 			FlxG.sound.playMusic(Util.music("AtlasEarth"), 0.5, true);
 			FlxG.sound.music.play();

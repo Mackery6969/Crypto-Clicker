@@ -32,6 +32,10 @@ import Sys;
 #if discord_rpc
 import DiscordHandler;
 #end
+// hcodec
+#if hxCodec
+import hxcodec.flixel.FlxVideo;
+#end
 
 /*
 	#if sys
