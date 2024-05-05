@@ -19,8 +19,12 @@ class ClientPrefs
 	public static var flashing:Bool = true; // assumes that this is true by default which should be fixed as fast as possible
 	public static var framerate:Int = 60;
 	public static var antialiasing:Bool = false;
-	public static var autoPause:Bool = true;
+	public static var autoPause:Bool = false;
 	public static var reloadRequired:Bool = false; // not actually an option, just a flag to know if the game needs to be reloaded to apply the settings
+
+	// feel free to modify these to your hearts content!
+	// these are the default values for the game
+	public static var defaultFont:String = "comic-sans";
 
 	// saved stuff (non option related)
 	// stuff soon xD

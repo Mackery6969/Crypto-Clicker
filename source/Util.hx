@@ -1,8 +1,8 @@
 package;
 
+import flixel.graphics.frames.FlxAtlasFrames;
 import lime.utils.Assets;
 import openfl.utils.Assets;
-import flixel.graphics.frames.FlxAtlasFrames;
 
 class Util
 {
@@ -60,6 +60,36 @@ class Util
 	inline public static function json(path:String)
 	{
 		return file = 'assets/$path.json';
+	}
+
+	inline public static function font(?font:String, ?type:String = '', ?extention:String = 'ttf')
+	{
+		if (font == '')
+			font = ClientPrefs.defaultFont;
+		if (type != '')
+		{
+			if (type == 'bold italic')
+			{
+				font = font + '-' + 'bold-italic';
+			}
+			else if (type == 'italic')
+			{
+				font = font + '-italic';
+			}
+			else if (type == 'bold')
+			{
+				font = font + '-bold';
+			}
+		}
+
+		#if html5
+		extention = 'woff';
+		#end
+		if (type != '')
+		{
+			return file = 'assets/fonts/duplicates/$font.$extention';
+		}
+		return file = 'assets/fonts/$font.$extention';
 	}
 
 	inline public static function capitalize(text:String)

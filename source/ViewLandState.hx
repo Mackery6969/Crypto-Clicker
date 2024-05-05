@@ -158,6 +158,8 @@ class ViewLandState extends FlxState
 			{
 				var land = lands[y * 18 + x];
 				var text = new FlxText(x * 64, y * 64, 64, land.owned ? "owned" : "not owned");
+				text.font = Util.font("comic-sans");
+				text.color = 0xff000000;
 				add(text);
 			}
 		}

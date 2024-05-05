@@ -20,6 +20,7 @@ class PlayState extends FlxState
 	var versionText:FlxText;
 	var quarter:FlxSprite;
 	var moneyText:FlxText;
+	var mpsText:FlxText;
 	var gear:FlxSprite;
 	var shop:FlxSprite;
 	var atlasEarth:FlxSprite;
@@ -106,6 +107,7 @@ class PlayState extends FlxState
 
 		// add version text at the bottom left corner
 		versionText = new FlxText(0, 0, FlxG.width, version);
+		versionText.font = Util.font("comic-sans");
 		versionText.x = 10;
 		versionText.y = FlxG.height - 20;
 		versionText.size = 12;
@@ -121,10 +123,20 @@ class PlayState extends FlxState
 
 		// add text to the screen that says how much money you have
 		moneyText = new FlxText(0, 0, FlxG.width, "$0");
-		moneyText.x = quarter.x + 15;
+		moneyText.font = Util.font("comic-sans");
+		moneyText.x = quarter.x;
 		moneyText.y = quarter.y - 100;
 		moneyText.size = 20;
 		add(moneyText);
+
+		// add text to the screen that says how much money you make per second
+		mpsText = new FlxText(0, 0, FlxG.width, "+$" + moneyPerSecond + "/s");
+		mpsText.font = Util.font("comic-sans");
+		mpsText.x = quarter.x + 10;
+		mpsText.y = moneyText.y + 28;
+		mpsText.size = 10;
+		mpsText.alpha = 0.75;
+		add(mpsText);
 
 		// add gear in top right corner to open settings
 		gear = new FlxSprite(0, 0, Util.image("gear"));
@@ -215,6 +227,9 @@ class PlayState extends FlxState
 		// this is done every frame
 		moneyShownAsText = Util.round(money, 3); // i want it to show how much money you are in debt
 		moneyText.text = '$' + moneyShownAsText;
+
+		// update the text to show how much money you make per second
+		mpsText.text = "+$" + Util.round(moneyPerSecond, 3) + "/s";
 
 		ClientPrefs.saveSettings();
 

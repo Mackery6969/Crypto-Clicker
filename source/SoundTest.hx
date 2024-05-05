@@ -16,7 +16,7 @@ class SoundTest extends FlxState
 		super.create();
 
 		var text:FlxText = new FlxText(0, 0, FlxG.width, "SOUND MODDED TEST");
-		text.setFormat(null, 26, 0xFFFFFFFF, "center");
+		text.setFormat(Util.font("comic-sans", "bold"), 26, 0xFFFFFFFF, "center");
 		text.y = 10;
 		add(text);
 

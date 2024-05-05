@@ -56,6 +56,8 @@ class LandOptionsState extends FlxState
 			}
 			#end
 		});
+		// update the font in the button
+		buyLandButton.label.font = Util.font("comic-sans");
 		if (!land.owned)
 			add(buyLandButton);
 
@@ -68,6 +70,7 @@ class LandOptionsState extends FlxState
 				FlxG.switchState(new ViewLandState());
 			}
 		});
+		sellLandButton.label.font = Util.font("comic-sans");
 		if (land.owned)
 			add(sellLandButton);
 	}

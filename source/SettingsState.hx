@@ -30,13 +30,15 @@ class SettingsState extends FlxState
 		add(backArrow);
 
 		var title = new FlxText(0, 0, FlxG.width, "Settings");
-		title.size = 24;
+		title.font = Util.font("comic-sans", "bold");
+		title.size = 48;
 		title.alignment = "center";
 		add(title);
 
 		var changesDoneText = new FlxText(0, 0, FlxG.width, "Changes have been made!");
 
 		reloadReccomendedText = new FlxText(0, 0, FlxG.width, "Reload Required!");
+		reloadReccomendedText.font = Util.font("comic-sans", "bold italics");
 		reloadReccomendedText.size = 18;
 		reloadReccomendedText.alignment = "center";
 		reloadReccomendedText.y = title.y + title.height + 10;
@@ -45,6 +47,7 @@ class SettingsState extends FlxState
 		add(reloadReccomendedText);
 
 		var musicText = new FlxText(0, 0, FlxG.width, "Music: ON");
+		musicText.font = Util.font("comic-sans");
 		musicText.size = 16;
 		musicText.alignment = "center";
 		musicText.y = FlxG.height / 2 - musicText.height / 2 - 250;
@@ -72,6 +75,7 @@ class SettingsState extends FlxState
 		add(musicButton);
 
 		var soundText = new FlxText(0, 0, FlxG.width, "Sound: ON");
+		soundText.font = Util.font("comic-sans");
 		soundText.size = 16;
 		soundText.alignment = "center";
 		soundText.y = FlxG.height / 2 - soundText.height / 2 - 250;
@@ -99,6 +103,7 @@ class SettingsState extends FlxState
 		add(soundButton);
 
 		var fullscreenText = new FlxText(0, 0, FlxG.width, "Fullscreen: FALSE");
+		fullscreenText.font = Util.font("comic-sans");
 		fullscreenText.size = 16;
 		fullscreenText.alignment = "center";
 		fullscreenText.y = FlxG.height / 2 - fullscreenText.height / 2 - 250;
@@ -126,6 +131,7 @@ class SettingsState extends FlxState
 		add(fullscreenButton);
 
 		var reducedMotionText = new FlxText(0, 0, FlxG.width, "Reduced Motion: FALSE");
+		reducedMotionText.font = Util.font("comic-sans");
 		reducedMotionText.size = 16;
 		reducedMotionText.alignment = "center";
 		reducedMotionText.y = FlxG.height / 2 - reducedMotionText.height / 2 - 250;
@@ -153,6 +159,7 @@ class SettingsState extends FlxState
 		add(reducedMotionButton);
 
 		var showFPSText = new FlxText(0, 0, FlxG.width, "Show FPS: FALSE");
+		showFPSText.font = Util.font("comic-sans");
 		showFPSText.size = 16;
 		showFPSText.alignment = "center";
 		showFPSText.y = FlxG.height / 2 - showFPSText.height / 2 - 250;
@@ -189,6 +196,7 @@ class SettingsState extends FlxState
 		add(showFPSButton);
 
 		var flashingText = new FlxText(0, 0, FlxG.width, "Flashing Lights: TRUE");
+		flashingText.font = Util.font("comic-sans");
 		flashingText.size = 16;
 		flashingText.alignment = "center";
 		flashingText.y = FlxG.height / 2 - flashingText.height / 2 - 150;
@@ -216,6 +224,7 @@ class SettingsState extends FlxState
 		add(flashingButton);
 
 		var framerateText = new FlxText(0, 0, FlxG.width, "Set Framerate");
+		framerateText.font = Util.font("comic-sans");
 		framerateText.size = 16;
 		framerateText.alignment = "center";
 		framerateText.y = FlxG.height / 2 - framerateText.height / 2 - 150;
@@ -231,6 +240,7 @@ class SettingsState extends FlxState
 		add(framerateButton);
 
 		var antianaliasingText = new FlxText(0, 0, FlxG.width, "Antialiasing: TRUE");
+		antianaliasingText.font = Util.font("comic-sans");
 		antianaliasingText.size = 16;
 		antianaliasingText.alignment = "center";
 		antianaliasingText.y = FlxG.height / 2 - antianaliasingText.height / 2 - 150;
@@ -257,14 +267,15 @@ class SettingsState extends FlxState
 		antianaliasingButton.x = FlxG.width / 2 - antianaliasingButton.width / 2;
 		add(antianaliasingButton);
 
-		var autoPauseText = new FlxText(0, 0, FlxG.width, "Auto Pause: TRUE");
+		var autoPauseText = new FlxText(0, 0, FlxG.width, "Auto Pause: FALSE");
+		autoPauseText.font = Util.font("comic-sans");
 		autoPauseText.size = 16;
 		autoPauseText.alignment = "center";
 		autoPauseText.y = FlxG.height / 2 - autoPauseText.height / 2 - 150;
 		autoPauseText.x = FlxG.width / 2 - autoPauseText.width / 2 + 200;
-		if (!ClientPrefs.autoPause)
+		if (ClientPrefs.autoPause)
 		{
-			autoPauseText.text = "Auto Pause: FALSE";
+			autoPauseText.text = "Auto Pause: TRUE";
 		}
 		add(autoPauseText);
 
@@ -285,6 +296,7 @@ class SettingsState extends FlxState
 		add(autoPauseButton);
 
 		var resetSettingsText = new FlxText(0, 0, FlxG.width, "Reset Settings");
+		resetSettingsText.font = Util.font("comic-sans", "bold");
 		resetSettingsText.size = 18;
 		resetSettingsText.alignment = "center";
 		// position at bottom right corner leaving space for the button + reset game save button
@@ -303,6 +315,7 @@ class SettingsState extends FlxState
 		add(resetSettingsButton);
 
 		var resetGameSaveText = new FlxText(0, 0, FlxG.width, "Reset Game Save");
+		resetGameSaveText.font = Util.font("comic-sans", "bold");
 		resetGameSaveText.size = 18;
 		resetGameSaveText.alignment = "center";
 		// position at bottom right corner leaving space for the button1
@@ -330,7 +343,7 @@ class SettingsState extends FlxState
 
 		// add text
 		fpsMenuText = new FlxText(0, 0, FlxG.width, "Set FPS (60-200): " + fps);
-		fpsMenuText.setFormat(null, 16, 0xFFFFFFFF, "center");
+		fpsMenuText.setFormat(Util.font("comic-sans"), 16, 0xFFFFFFFF, "center");
 		// position at center of box
 		fpsMenuText.y = (FlxG.height - fpsMenuText.height) / 2;
 		fpsMenuText.visible = false;
