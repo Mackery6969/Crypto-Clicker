@@ -24,8 +24,8 @@ lol
 ## Credits
 - Mackery
 - Somi (Beta Tester + help)
-- Ronezjk15 (maker of Raldi)
+- Ronezjk15 (maker of Raldi & some of the music)
 - 504Brandon (borrowed code)
 - Srt (borrowed code)
 - Leather128 (borrowed code)
-- you! (for reading this)
+- you! (for reading this :) )

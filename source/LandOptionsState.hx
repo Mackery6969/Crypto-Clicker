@@ -38,6 +38,8 @@ class LandOptionsState extends FlxState
 			if (!land.owned)
 			{
 				PlayState.money -= land.cost;
+				ClientPrefs.totalMoneySpent += land.cost;
+				ClientPrefs.totalLandBought++;
 				ViewLandState.buyLand(land);
 				if (ClientPrefs.sound)
 					FlxG.sound.play(Util.sound("buy"), 0.5);
@@ -48,6 +50,8 @@ class LandOptionsState extends FlxState
 			if (!land.owned && PlayState.money >= land.cost)
 			{
 				PlayState.money -= land.cost;
+				ClientPrefs.totalMoneySpent += land.cost;
+				ClientPrefs.totalLandBought++;
 				ViewLandState.buyLand(land);
 				if (ClientPrefs.sound)
 					FlxG.sound.play(Util.sound("buy"), 0.5);
@@ -65,7 +69,9 @@ class LandOptionsState extends FlxState
 		{
 			if (land.owned)
 			{
-				PlayState.money += land.cost;
+				PlayState.money += land.sellPrice;
+				ClientPrefs.totalMoneyGained += land.sellPrice;
+				ClientPrefs.totalLandBought--;
 				land.owned = false;
 				FlxG.switchState(new ViewLandState());
 			}
@@ -78,6 +84,8 @@ class LandOptionsState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		ClientPrefs.runTime += elapsed;
 
 		#if discord_rpc
 		DiscordHandler.changePresence("Using Atlas Earth\n" + ViewLandState.ownedLand + ' / ' + ViewLandState.lands.length + ' tiles owned',

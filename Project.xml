@@ -3,7 +3,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Crypto Clicker" file="CryptoClicker" main="Main" version="1.0.2" company="MackeryGames" />
+	<app title="Crypto Clicker" file="CryptoClicker" main="Main" version="1.0.4" company="MackeryGames" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -34,21 +34,32 @@
 	<source path="source" />
 	<assets path="assets" />
 
+	<library name="videos"         preload="true" />
+
+	<assets path='README.md' rename='readme.txt' />
+
+	<!-- specifically embed the gjapi.txt file in data folder so it cant be read-->
+	<assets path='assets/data/gjapi.txt' embed='true' />
+
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
 
 	<!--In case you want to use the addons package-->
-	<!--<haxelib name="flixel-addons" />-->
+	<haxelib name="flixel-addons" />
 
 	<!--In case you want to use the ui package-->
-	<!--<haxelib name="flixel-ui" />-->
+	<haxelib name="flixel-ui" />
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
 
 	<haxelib name="discord_rpc" if="desktop"/>
-	<haxelib name="hxCodec" if="desktop || android" />
+	<haxelib name="hxCodec" if="(desktop || android) && !linux" />
+
+	<haxelib name="tentools" />
+	<haxelib name="systools" />
+	<ndll name="systools" haxelib="systools" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -87,4 +98,14 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+
+	<assets path='art/iconOG.png' rename='icon.png' if="linux" />
+	
+	<icon path="art/icon16.png" size='16'/>
+	<icon path="art/icon32.png" size='32'/>
+	<icon path="art/icon64.png" size='64'/>
+	<icon path="art/icon128.png" size='128'/>
+	<icon path="art/icon256.png" size='256'/>
+	<icon path="art/icon512.png" size='512'/>
+	<icon path="art/iconOG.png" />
 </project>

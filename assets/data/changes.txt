@@ -1,1 +1,3 @@
-- Added Sounds
+- Added Gamejolt
+- optimized the game
+- videos are now supported (BETA)

@@ -1,0 +1,33 @@
+name: Bug Report
+description: Report bugs with the game here.
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe your problem here."
+    validations:
+      required: true
+
+  - type: textarea
+    id: replicate
+    attributes:
+      label: "Is there any way to replicate this bug? if so, describe it here."
+    validations:
+      required: false
+  
+  - type: textarea
+    id: terminal
+    attributes:
+      label: "Paste your cmd/terminal here, it might be useful"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: modified
+    attributes:
+      label: Modified Game
+      description: Have you modified the game at all?
+      options:
+        - label: Modified?
+          required: false

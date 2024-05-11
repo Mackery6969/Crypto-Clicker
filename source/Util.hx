@@ -179,6 +179,12 @@ class Util
 		return file.split('\n');
 	}
 
+	inline public static function readOneLine(path:String):String // only read the first line
+	{
+		var file = Assets.getText(path);
+		return file.split('\n')[0];
+	}
+
 	inline public static function video(video:String, folder:String = 'videos')
 	{
 		return file = 'assets/$folder/$video.mp4';
@@ -187,5 +193,72 @@ class Util
 	inline public static function sparrowAtlas(path:String, folder:String = 'images')
 	{
 		return FlxAtlasFrames.fromSparrow('assets/$folder/$path.png', 'assets/$folder/$path.xml');
+	}
+
+	public static function numToString(num:Float):String
+	{
+		if (num >= 1000000000000000)
+		{
+			return Std.string(Util.round(num / 1000000000000000, 3)) + ' quadrillion';
+		}
+		else if (num >= 1000000000000)
+		{
+			return Std.string(Util.round(num / 1000000000000, 3)) + ' trillion';
+		}
+		else if (num >= 1000000000)
+		{
+			return Std.string(Util.round(num / 1000000000, 3)) + ' billion';
+		}
+		else if (num >= 1000000)
+		{
+			return Std.string(Std.int(num / 1000000)) + ' million';
+		}
+		else if (num >= 1000)
+		{
+			return Std.string(Util.round(num / 1000, 3)) + ' thousand';
+		}
+		return Std.string(num);
+	}
+
+	public static function formatTime(time:Float):String
+	{
+		var hours:Int = Std.int(time / 3600);
+		var minutes:Int = Std.int(time / 60);
+		var seconds:Int = Std.int(time % 60);
+		var secondsString:String = '';
+		if (seconds < 10)
+			secondsString = '0';
+		if (hours > 0)
+			return '$hours:$minutes:$secondsString$seconds';
+		else if (minutes > 0)
+			return '$minutes:$secondsString$seconds';
+		return '0:$secondsString$seconds';
+	}
+	
+	inline public static function getExtension(path:String):String
+	{
+		var split:Array<String> = path.split('.');
+		return split[split.length - 1];
+	}
+
+	inline public static function getFileName(path:String):String
+	{
+		var split:Array<String> = path.split('/');
+		return split[split.length - 1];
+	}
+
+	inline public static function fileExists(path:String):Bool
+	{
+		return Assets.exists(path);
+	}
+
+	inline public static function writeToFile(path:String, data:String):Void
+	{
+		sys.io.File.saveContent(path, data);
+	}
+
+	inline public static function deleteFile(path:String):Void
+	{
+		sys.FileSystem.deleteFile(path);
 	}
 }

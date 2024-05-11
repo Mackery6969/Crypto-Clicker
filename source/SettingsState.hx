@@ -26,7 +26,7 @@ class SettingsState extends FlxState
 		super.create();
 
 		backArrow = new FlxSprite(0, 0, Util.image("Arrow_Back_L"));
-		backArrow.scale.set(0.8, 0.8);
+		backArrow.scale.set(0.6, 0.6);
 		add(backArrow);
 
 		var title = new FlxText(0, 0, FlxG.width, "Settings");
@@ -353,6 +353,8 @@ class SettingsState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		ClientPrefs.runTime += elapsed;
 
 		#if discord_rpc
 		DiscordHandler.changePresence("In the menus...", "SettingsState");

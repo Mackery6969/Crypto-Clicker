@@ -1,0 +1,10 @@
+name: Suggestion
+description: Submit something to be added to CC
+labels: [suggestion]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe your suggestion here."
+    validations:
+      required: true

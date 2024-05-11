@@ -1,5 +1,6 @@
 package;
 
+import GJLogin;
 import ClientPrefs;
 import ShowFPS;
 import flixel.FlxGame;
@@ -28,7 +29,9 @@ class Main extends Sprite
 
 		#if html5
 		ClientPrefs.fullscreen = true;
-		ClientPrefs.autoPause = FlxG.mouse.visible = false;
+		ClientPrefs.autoPause = false;
+
+		FlxG.mouse.visible = true;
 		#end
 
 		#if discord_rpc

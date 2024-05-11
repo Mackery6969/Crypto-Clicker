@@ -39,6 +39,7 @@ class ViewLandState extends FlxState
 	var numScrollingGridsX:Int;
 	var numScrollingGridsY:Int;
 	var scrollingGrids:Array<FlxSprite>;
+	var moneyText:FlxText;
 
 	var scrollSpeed:Float = 25;
 
@@ -192,7 +193,10 @@ class ViewLandState extends FlxState
 
 		if (ClientPrefs.music && FlxG.sound.music == null && PlayState.musicCanPlay)
 		{
-			FlxG.sound.playMusic(Util.music("AtlasEarth"), 0.5, true);
+			if (ClientPrefs.secretSounds)
+				FlxG.sound.playMusic(Util.music("raldi/AtlasEarth"), 0.5, true);
+			else
+				FlxG.sound.playMusic(Util.music("AtlasEarth"), 0.5, true);
 			FlxG.sound.music.play();
 			if (songPosition != 0)
 				FlxG.sound.music.time = songPosition;
@@ -206,11 +210,39 @@ class ViewLandState extends FlxState
 				ownedLand++;
 			}
 		}
+
+		// add money text
+		moneyText = new FlxText(0, 0, 200, "$" + PlayState.money);
+		moneyText.font = Util.font("comic-sans");
+		moneyText.color = 0xffffffff;
+		moneyText.size = 26;
+		moneyText.scrollFactor.set(0, 0);
+		add(moneyText);
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		ClientPrefs.runTime += elapsed;
+
+		// update the money text
+		if (!PlayState.inDebt)
+		{
+			moneyText.text = "$" + Util.round(PlayState.money, 3);
+			moneyText.color = 0xffffffff;
+		}
+		else
+		{
+			moneyText.text = '-$' + Util.round(PlayState.money * -1, 3) + '\n' + Util.round(PlayState.inDebtTimer.timeLeft, 0);
+			moneyText.color = 0xffff0000;
+		}
+
+		if (!ClientPrefs.reducedMotion)
+		{
+			moneyText.x = 10 + Math.random() * 5;
+			moneyText.y = 10 + Math.random() * 5;
+		}
 
 		#if discord_rpc
 		DiscordHandler.changePresence("Using Atlas Earth\n" + ownedLand + ' / ' + lands.length + ' tiles owned', "ViewLandState");
@@ -221,19 +253,21 @@ class ViewLandState extends FlxState
 				FlxG.sound.playMusic(Util.music("AtlasEarth"), 0.5);
 		 */
 
-		for (tile in scrollingGrids)
-		{
-			tile.x -= scrollSpeed * elapsed;
-			tile.y += scrollSpeed * elapsed;
+		if (!ClientPrefs.reducedMotion) {
+			for (tile in scrollingGrids)
+			{
+				tile.x += scrollSpeed * elapsed;
+				tile.y += scrollSpeed * elapsed;
 
-			// If the tile has gone off the bottom or left of the screen, move it back to the top right
-			if (tile.y >= FlxG.height)
-			{
-				tile.y -= tile.height * numScrollingGridsY;
-			}
-			if (tile.x <= -tile.width)
-			{
-				tile.x += tile.width * numScrollingGridsX;
+				// If the tile has gone off the bottom or left of the screen, move it back to the top right
+				if (tile.y >= FlxG.height)
+				{
+					tile.y -= tile.height * numScrollingGridsY;
+				}
+				if (tile.x >= FlxG.width)
+				{
+					tile.x -= tile.width * numScrollingGridsX;
+				}
 			}
 		}
 

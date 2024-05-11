@@ -9,7 +9,7 @@ class ClientPrefs
 {
 	// for load and saving settings
 	static var settingNames:Array<String> = [
-		"fullscreen", "sound", "music", "reducedMotion", "showFPS", "flashing", "framerate", "antialiasing", "autoPause", "reloadRequired"
+		"fullscreen", "sound", "music", "reducedMotion", "showFPS", "flashing", "framerate", "antialiasing", "autoPause", "reloadRequired", "secretSounds", "username", "token", "privateKey"
 	];
 	public static var fullscreen:Bool = false;
 	public static var sound:Bool = true;
@@ -20,15 +20,38 @@ class ClientPrefs
 	public static var framerate:Int = 60;
 	public static var antialiasing:Bool = false;
 	public static var autoPause:Bool = false;
+	public static var secretSounds:Bool = false; // for raldi sfx
+
 	public static var reloadRequired:Bool = false; // not actually an option, just a flag to know if the game needs to be reloaded to apply the settings
 
 	// feel free to modify these to your hearts content!
 	// these are the default values for the game
 	public static var defaultFont:String = "comic-sans";
 
+	// stuff for gamejolt api
+	public static var gameJolt:Bool = false;
+	public static var gjGameID:Int = 895023;
+	public static var privateKey:String;
+	public static var sessionRunning:Bool = false;
+	public static var username:String = "Username";
+	public static var token:String = "Token";
+
 	// saved stuff (non option related)
 	// stuff soon xD
-	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick", "lands", "inDebt"];
+	static var data:Array<String> = ["money", "moneyPerSecond", "moneyPerClick", "lands", "inDebt", "lost", "timeLeft"];
+
+	// stuff for results
+	public static var totalMoneyGained:Float = 0;
+	public static var totalMoneyLost:Float = 0;
+	public static var totalMoneySpent:Float = 0;
+	public static var totalLandBought:Int = 0;
+	public static var totalBuildingsBought:Int = 0;
+	public static var totalClicks:Int = 0;
+	public static var finalMoney:Float = 0;
+	public static var finalMoneyPerSecond:Float = 0;
+	public static var finalMoneyPerClick:Float = 0;
+	public static var finalLands:Int = 0;
+	public static var runTime:Float = 0;
 
 	public static function saveSettings()
 	{
@@ -53,6 +76,22 @@ class ClientPrefs
 		saveData.data.moneyPerClick = PlayState.moneyPerClick;
 		saveData.data.inDebt = PlayState.inDebt;
 		saveData.data.lands = ViewLandState.lands;
+		saveData.data.lost = PlayState.lost;
+		saveData.data.timeLeft = PlayState.timeLeft;
+
+		// for the results screen
+		saveData.data.totalMoneyGained = totalMoneyGained;
+		saveData.data.totalMoneyLost = totalMoneyLost;
+		saveData.data.totalMoneySpent = totalMoneySpent;
+		saveData.data.totalLandBought = totalLandBought;
+		saveData.data.totalBuildingsBought = totalBuildingsBought;
+		saveData.data.totalClicks = totalClicks;
+		saveData.data.finalMoney = finalMoney;
+		saveData.data.finalMoneyPerSecond = finalMoneyPerSecond;
+		saveData.data.finalMoneyPerClick = finalMoneyPerClick;
+		saveData.data.finalLands = finalLands;
+		saveData.data.runTime = runTime;
+
 		saveData.flush();
 		saveData.destroy();
 	}
@@ -117,6 +156,60 @@ class ClientPrefs
 		if (Reflect.hasField(FlxG.save.data, "lands"))
 		{
 			ViewLandState.lands = Reflect.field(FlxG.save.data, "lands");
+		}
+		if (Reflect.hasField(FlxG.save.data, "lost"))
+		{
+			PlayState.lost = Reflect.field(FlxG.save.data, "lost"); // so if the player goes into debt, they cant just reload the game to get out of it
+		}
+		if (Reflect.hasField(FlxG.save.data, "timeLeft"))
+		{
+			PlayState.timeLeft = Reflect.field(FlxG.save.data, "timeLeft");
+		}
+
+		// for the results screen
+		if (Reflect.hasField(FlxG.save.data, "totalMoneyGained"))
+		{
+			totalMoneyGained = Reflect.field(FlxG.save.data, "totalMoneyGained");
+		}
+		if (Reflect.hasField(FlxG.save.data, "totalMoneyLost"))
+		{
+			totalMoneyLost = Reflect.field(FlxG.save.data, "totalMoneyLost");
+		}
+		if (Reflect.hasField(FlxG.save.data, "totalMoneySpent"))
+		{
+			totalMoneySpent = Reflect.field(FlxG.save.data, "totalMoneySpent");
+		}
+		if (Reflect.hasField(FlxG.save.data, "totalLandBought"))
+		{
+			totalLandBought = Reflect.field(FlxG.save.data, "totalLandBought");
+		}
+		if (Reflect.hasField(FlxG.save.data, "totalBuildingsBought"))
+		{
+			totalBuildingsBought = Reflect.field(FlxG.save.data, "totalBuildingsBought");
+		}
+		if (Reflect.hasField(FlxG.save.data, "totalClicks"))
+		{
+			totalClicks = Reflect.field(FlxG.save.data, "totalClicks");
+		}
+		if (Reflect.hasField(FlxG.save.data, "finalMoney"))
+		{
+			finalMoney = Reflect.field(FlxG.save.data, "finalMoney");
+		}
+		if (Reflect.hasField(FlxG.save.data, "finalMoneyPerSecond"))
+		{
+			finalMoneyPerSecond = Reflect.field(FlxG.save.data, "finalMoneyPerSecond");
+		}
+		if (Reflect.hasField(FlxG.save.data, "finalMoneyPerClick"))
+		{
+			finalMoneyPerClick = Reflect.field(FlxG.save.data, "finalMoneyPerClick");
+		}
+		if (Reflect.hasField(FlxG.save.data, "finalLands"))
+		{
+			finalLands = Reflect.field(FlxG.save.data, "finalLands");
+		}
+		if (Reflect.hasField(FlxG.save.data, "runTime"))
+		{
+			runTime = Reflect.field(FlxG.save.data, "runTime");
 		}
 
 		FlxG.save.flush();
