@@ -38,9 +38,6 @@
 
 	<assets path='README.md' rename='readme.txt' />
 
-	<!-- specifically embed the gjapi.txt file in data folder so it cant be read-->
-	<assets path='assets/data/gjapi.txt' embed='true' />
-
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
