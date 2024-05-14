@@ -27,6 +27,22 @@ class Main extends Sprite
 		if (ClientPrefs.showFPS)
 			addChild(new ShowFPS(10, 3, 0xFFFFFF));
 
+		#if desktop
+		var apiKey:String = Sys.getEnv('GAMEJOLT_API_KEY');
+        
+        if (apiKey == null) {
+            // Fallback or handle the error, e.g., throw an exception or use a mock key
+            trace('API key not found! Ensure GAMEJOLT_API_KEY is set.');
+            apiKey = "development-key"; // Use a dummy key or handle appropriately
+        }
+
+		ClientPrefs.privateKey = apiKey;
+		if (ClientPrefs.privateKey == "development-key")
+			ClientPrefs.privateKey = ""; // Clear the key if it's the dummy key to prevent misuse
+
+		//GJLogin.connect();
+		#end
+
 		#if html5
 		ClientPrefs.fullscreen = true;
 		ClientPrefs.autoPause = false;

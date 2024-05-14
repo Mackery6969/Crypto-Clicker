@@ -252,6 +252,7 @@ class Util
 		return Assets.exists(path);
 	}
 
+	#if desktop
 	inline public static function writeToFile(path:String, data:String):Void
 	{
 		sys.io.File.saveContent(path, data);
@@ -261,4 +262,5 @@ class Util
 	{
 		sys.FileSystem.deleteFile(path);
 	}
+	#end
 }

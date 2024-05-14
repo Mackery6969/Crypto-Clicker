@@ -1,5 +1,6 @@
 package;
 
+#if desktop
 import flixel.addons.ui.FlxUIInputText;
 import tentools.api.FlxGameJolt as GJApi;
 import flixel.addons.ui.FlxUIState;
@@ -302,3 +303,4 @@ class GameJoltInfo extends FlxSubState
      * Random quotes I got from other people. Nothing more, nothing less. Just for funny.
      */
 }
+#end

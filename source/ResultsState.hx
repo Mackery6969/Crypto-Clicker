@@ -181,11 +181,13 @@ class ResultsState extends FlxState
 		results.add(runTime);
 		results.add(pressEnter);
 
+		#if (desktop && !debug)
 		// update gamejolt highscores
 		if (ClientPrefs.gameJolt) {
 			GJLogin.addScore(Math.round(ClientPrefs.totalMoneyGained), 906371);
 			GJLogin.addScore(Math.round(ClientPrefs.totalClicks), 907239);
 		}
+		#end
 	}
 
 	override public function update(elapsed:Float)

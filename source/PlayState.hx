@@ -83,18 +83,16 @@ class PlayState extends FlxState
 			trace("Current version: " + version);
 		}
 
-		if (Util.fileExists("assets/data/gjapi.txt") || ClientPrefs.privateKey != "") {
+		#if desktop
+		if (ClientPrefs.privateKey != "") {
 			trace('private key found!');
 			ClientPrefs.gameJolt = true;
-			ClientPrefs.privateKey = Util.readOneLine("assets/data/gjapi.txt");
 			//FlxGameJolt.fetchUser();
-			#if !debug
-			Util.deleteFile("assets/data/gjapi.txt");
-			#end
 		}
 
 		GJLogin.connect();
 		GJLogin.authDaUser(ClientPrefs.username, ClientPrefs.token);
+		#end
 
 		super.create();
 
@@ -441,6 +439,7 @@ class PlayState extends FlxState
 				&& FlxG.mouse.y <= quarter.y + quarter.height)
 			{
 				ClientPrefs.totalClicks++;
+				#if desktop
 				if (ClientPrefs.gameJolt)
 					{
 						// checks specific to trophies
@@ -451,6 +450,7 @@ class PlayState extends FlxState
 						if (ClientPrefs.totalClicks >= 1000 && !GJLogin.checkTrophy(232723))
 							GJLogin.getTrophy(232723); // clickathon clicks achievement
 					}
+				#end
 				// play buy.ogg
 				if (ClientPrefs.sound)
 					FlxG.sound.play(Util.sound("buy"), 0.5);
@@ -531,6 +531,7 @@ class PlayState extends FlxState
 				#end
 				#end
 			}
+			#if desktop
 			// check for gamejolt button click
 			if (ClientPrefs.gameJolt)
 			{
@@ -541,6 +542,7 @@ class PlayState extends FlxState
 					FlxG.switchState(new GJLogin());
 				}
 			}
+			#end
 		}
 
 		#if sys
@@ -579,8 +581,6 @@ class PlayState extends FlxState
 			money -= 10;
 			ClientPrefs.totalMoneyLost -= 10;
 		}
-		else if (FlxG.keys.justPressed.G)
-			FlxG.switchState(new GJLogin());
 		#end
 
 		// add money per second

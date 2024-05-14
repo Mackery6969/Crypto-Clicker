@@ -19,6 +19,13 @@ lol
 1. Clone the repo
 2. go to [psych engine source](https://github.com/ShadowMario/FNF-PsychEngine/tree/main/setup) lol
 3. run setup.bat
+4. run these commands
+```bash
+haxelib git tentools https://github.com/TentaRJ/tentools.git
+haxelib git systools https://github.com/haya3218/systools
+haxelib run lime rebuild systools [windows, mac, linux]
+haxelib update --global
+```
 4. run lime test [build] (windows, mac, android) to build the game
 
 ## Credits
