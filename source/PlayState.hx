@@ -2,6 +2,7 @@ package;
 
 import ResultsState;
 import SoundTest;
+import Background;
 import flash.display.GradientType;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -9,6 +10,7 @@ import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import haxe.io.Output;
 import openfl.geom.Matrix;
+import lime.system.System;
 #if desktop
 import sys.io.Process;
 #end
@@ -18,9 +20,8 @@ class PlayState extends FlxState
 	static var version:String; // for version checker
 	static var outdated:Bool = false; // for version checker
 
-	var bgGradient:FlxSprite;
-	var gridOne:FlxSprite;
-	var scrollingGrid:FlxSprite;
+	var background:Background;
+
 	var versionText:FlxText;
 	var quarter:FlxSprite;
 	var moneyText:FlxText;
@@ -55,7 +56,11 @@ class PlayState extends FlxState
 	static var canInteract:Bool = true;
 	public static var timeLeft:Float = 0;
 
+	var autoSaveTimer:FlxTimer;
+
+	#if discord_rpc
 	public static var discordClient:String = "1192243967002165320";
+	#end
 
 	var moneyShownAsText:String = '$0';
 
@@ -73,7 +78,8 @@ class PlayState extends FlxState
 		ClientPrefs.loadSettings();
 
 		// get the version of the game
-		version = Util.read("data/version.txt");
+		#if !debug
+		var version:String = "1.0.4"; // Declare and initialize the version variable
 		// get the contents of a raw github file
 		var latestVersion = Util.getURL("https://raw.githubusercontent.com/Mackery6969/Crypto-Luigi-Clicker/main/assets/data/version.txt");
 		if (latestVersion != version)
@@ -82,6 +88,9 @@ class PlayState extends FlxState
 			trace("New version available! " + latestVersion);
 			trace("Current version: " + version);
 		}
+		#else
+		var version = "1.0.4 (Debug)";
+		#end
 
 		#if desktop
 		if (ClientPrefs.privateKey != "") {
@@ -89,56 +98,13 @@ class PlayState extends FlxState
 			ClientPrefs.gameJolt = true;
 			//FlxGameJolt.fetchUser();
 		}
-
-		GJLogin.connect();
-		GJLogin.authDaUser(ClientPrefs.username, ClientPrefs.token);
 		#end
 
 		super.create();
 
-		// Create a temporary sprite to load the image and get its dimensions
-		var tempSprite = new FlxSprite();
-		tempSprite.loadGraphic(Util.image("LuigiGrid"), false, false);
-		gridHeight = tempSprite.height;
-		gridWidth = tempSprite.width;
-
-		// Calculate the number of grids needed to fill the screen
-		numScrollingGridsY = Math.ceil(FlxG.height / gridHeight) + 1;
-		numScrollingGridsX = Math.ceil(FlxG.width / gridWidth) + 1;
-
-		// Create and position the grid sprites
-		scrollingGrids = new Array<FlxSprite>();
-		for (i in 0...numScrollingGridsY)
-		{
-			for (j in 0...numScrollingGridsX)
-			{
-				var grid = new FlxSprite();
-				grid.loadGraphic(Util.image("LuigiGrid"), false, false);
-				grid.x = -gridWidth * j;
-				grid.y = -gridHeight * i;
-				grid.antialiasing = ClientPrefs.antialiasing;
-
-				// Add the grid to the display list and the scrollingGrids array
-				add(grid);
-				scrollingGrids.push(grid);
-			}
-		}
-
-		// add gridOne
-		gridOne = new FlxSprite(0, 0, Util.image("LuigiGrid"));
-		// gridOne.scale.set(0.5, 0.5);
-		gridOne.antialiasing = ClientPrefs.antialiasing;
-		gridOne.alpha = 0.5;
-		add(gridOne);
-
-		// add background
-		bgGradient = new FlxSprite(0, 0, Util.image("bgGradient"));
-		// fit to the screen
-		bgGradient.scale.set(FlxG.width / bgGradient.width * 2, FlxG.height / bgGradient.height * 4);
-		// bgGradient.y = -bgGradient.height + FlxG.height;
-		bgGradient.y = -400;
-		bgGradient.antialiasing = ClientPrefs.antialiasing;
-		add(bgGradient);
+		// add the background
+		background = new Background();
+		add(background);
 
 		// add version text at the bottom left corner
 		versionText = new FlxText(0, 0, FlxG.width, version);
@@ -299,6 +265,15 @@ class PlayState extends FlxState
 			});
 		}
 		*/
+
+		// auto save every 30 seconds
+		autoSaveTimer = new FlxTimer();
+		autoSaveTimer.start(10, function(timer:FlxTimer)
+		{
+			trace("Auto saving...");
+			ClientPrefs.saveSettings();
+		});
+		autoSaveTimer.loops = 0;
 	}
 
 	override public function update(elapsed:Float)
@@ -316,25 +291,6 @@ class PlayState extends FlxState
 			FlxG.sound.music.play();
 			if (songPosition != 0)
 				FlxG.sound.music.time = songPosition;
-		}
-
-		// Scroll each tile diagonally across the screen
-		if (!ClientPrefs.reducedMotion) {
-			for (tile in scrollingGrids)
-			{
-				tile.x += scrollSpeed * elapsed;
-				tile.y += scrollSpeed * elapsed;
-
-				// If the tile has gone off the bottom or left of the screen, move it back to the top right
-				if (tile.y >= FlxG.height)
-				{
-					tile.y -= tile.height * numScrollingGridsY;
-				}
-				if (tile.x >= FlxG.width)
-				{
-					tile.x -= tile.width * numScrollingGridsX;
-				}
-			}
 		}
 
 		/*
@@ -470,6 +426,7 @@ class PlayState extends FlxState
 			{
 				if (ClientPrefs.sound)
 					FlxG.sound.play(Util.sound("click"), 0.5);
+				trace("Shop button clicked");
 				// FlxG.switchState(new ShopState());
 			}
 			// check for atlas earth button click
@@ -487,6 +444,7 @@ class PlayState extends FlxState
 					FlxG.sound.music.stop();
 					FlxG.sound.music = null;
 				}
+				/*
 				// 1 in 15 chance to play atlas earth ad
 				#if hxCodec
 				#if debug
@@ -509,20 +467,23 @@ class PlayState extends FlxState
 					FlxG.switchState(new ViewLandState());
 				}
 				#else
-				if (Math.random() < 0.06666666666666667 && !inDebt)
+				if (Math.random() < 0.06666666666666667)
 				{
-					// Play the ad
-					trace("Playing ad");
-					atlasAd.play(Util.video("atlas"));
-					// Wait for the ad to finish
-					// Then switch to the atlas earth state
-					atlasAd.onEndReached.add(function()
+					if (!inDebt)
 					{
-						trace("Ad finished");
-						atlasAdPlaying = false;
-						canInteract = true;
-						FlxG.switchState(new ViewLandState());
-					});
+						// Play the ad
+						trace("Playing ad");
+						atlasAd.play(Util.video("atlas"));
+						// Wait for the ad to finish
+						// Then switch to the atlas earth state
+						atlasAd.onEndReached.add(function()
+						{
+							trace("Ad finished");
+							atlasAdPlaying = false;
+							canInteract = true;
+							FlxG.switchState(new ViewLandState());
+						});
+					}
 				}
 				else
 				{
@@ -530,6 +491,8 @@ class PlayState extends FlxState
 				}
 				#end
 				#end
+				*/
+				FlxG.switchState(new ViewLandState());
 			}
 			#if desktop
 			// check for gamejolt button click
@@ -575,11 +538,15 @@ class PlayState extends FlxState
 			buildings[0]++;
 		else if (FlxG.keys.justPressed.PLUS) {
 			money += 10;
-			ClientPrefs.totalMoneyGained += 10;
+			//ClientPrefs.totalMoneyGained += 10;
 		}
 		else if (FlxG.keys.justPressed.MINUS) {
 			money -= 10;
-			ClientPrefs.totalMoneyLost -= 10;
+			//ClientPrefs.totalMoneyLost -= 10;
+		}
+		else if (FlxG.keys.justPressed.ZERO) {
+			inDebt = !inDebt;
+			inDebtTimer.reset(0);
 		}
 		#end
 

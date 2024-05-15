@@ -65,6 +65,9 @@ class SoundTest extends FlxState
 			FlxG.switchState(new PlayState());
 	}
 
+	/**
+	 * Resets the inputted secret code buffer.
+	 */
 	function resetCode()
 	{
 		buffer = '';

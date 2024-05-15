@@ -9,7 +9,7 @@ class ClientPrefs
 {
 	// for load and saving settings
 	static var settingNames:Array<String> = [
-		"fullscreen", "sound", "music", "reducedMotion", "showFPS", "flashing", "framerate", "antialiasing", "autoPause", "reloadRequired", "secretSounds", "username", "token", "privateKey"
+		"fullscreen", "sound", "music", "reducedMotion", "showFPS", "flashing", "framerate", "antialiasing", "autoPause", "reloadRequired", "preload", "secretSounds", "username", "token", "privateKey"
 	];
 	public static var fullscreen:Bool = false;
 	public static var sound:Bool = true;
@@ -20,6 +20,7 @@ class ClientPrefs
 	public static var framerate:Int = 60;
 	public static var antialiasing:Bool = false;
 	public static var autoPause:Bool = false;
+	public static var preload:Bool = false; // for the preloader
 	public static var secretSounds:Bool = false; // for raldi sfx
 
 	public static var reloadRequired:Bool = false; // not actually an option, just a flag to know if the game needs to be reloaded to apply the settings
@@ -53,6 +54,10 @@ class ClientPrefs
 	public static var finalLands:Int = 0;
 	public static var runTime:Float = 0;
 
+	/**
+	 * Save the settings to the save file
+	 * As well as the game data
+	 */
 	public static function saveSettings()
 	{
 		FlxG.save.bind("settings", "Crypto-Clicker-Settings");
@@ -96,6 +101,10 @@ class ClientPrefs
 		saveData.destroy();
 	}
 
+	/**
+	 * Load the settings from the save file
+	 * As well as the game data
+	 */
 	public static function loadSettings()
 	{
 		FlxG.save.bind("settings", "Crypto-Clicker-Settings");
@@ -217,6 +226,10 @@ class ClientPrefs
 		trace("Settings loaded");
 	}
 
+	/**
+	 * Reset the settings to the default values
+	 * @param category The category to reset, either "settings" or "game"
+	 */
 	public static function resetSettings(category:String)
 	{
 		if (category == "settings")
@@ -233,6 +246,10 @@ class ClientPrefs
 		#end
 	}
 
+	/**
+	 * Set the framerate
+	 * @param fps The framerate to set
+	 */
 	public static function setFPS(fps:Int)
 	{
 		framerate = fps;

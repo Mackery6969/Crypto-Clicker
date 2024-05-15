@@ -2,6 +2,7 @@ package;
 
 import LandOptionsState;
 import flixel.FlxObject;
+import Background;
 
 class Land
 {
@@ -32,13 +33,7 @@ class ViewLandState extends FlxState
 	// you can sell tiles for 50 dollars each
 	// you can add buildings thats in your inventory to the tiles to make them generate money for you
 	// you can buy tiles in all 8 directions from your claimed ones
-	var bgGradient:FlxSprite;
-	var gridOne:FlxSprite;
-	var gridHeight:Float;
-	var gridWidth:Float;
-	var numScrollingGridsX:Int;
-	var numScrollingGridsY:Int;
-	var scrollingGrids:Array<FlxSprite>;
+	var background:Background;
 	var moneyText:FlxText;
 
 	var scrollSpeed:Float = 25;
@@ -66,60 +61,16 @@ class ViewLandState extends FlxState
 
 		super.create();
 
-		// add background
-		bgGradient = new FlxSprite(0, 0, Util.image("bgGradient"));
-		// fit to the screen
-		bgGradient.scale.set(FlxG.width / bgGradient.width * 2, FlxG.height / bgGradient.height * 4);
-		// bgGradient.y = -bgGradient.height + FlxG.height;
-		bgGradient.y = -400;
-		bgGradient.antialiasing = ClientPrefs.antialiasing;
-		bgGradient.scrollFactor.set(0, 0);
-		add(bgGradient);
-
-		// add gridOne
-		gridOne = new FlxSprite(0, 0, Util.image("LuigiGrid"));
-		// gridOne.scale.set(0.5, 0.5);
-		gridOne.antialiasing = ClientPrefs.antialiasing;
-		gridOne.alpha = 0.5;
-		gridOne.scrollFactor.set(0, 0);
-		add(gridOne);
-
-		// Create a temporary sprite to load the image and get its dimensions
-		var tempSprite = new FlxSprite();
-		tempSprite.loadGraphic(Util.image("LuigiGrid"), false, false);
-		gridHeight = tempSprite.height;
-		gridWidth = tempSprite.width;
-
-		// Calculate the number of grids needed to fill the screen
-		numScrollingGridsY = Math.ceil(FlxG.height / gridHeight) + 1;
-		numScrollingGridsX = Math.ceil(FlxG.width / gridWidth) + 1;
-
-		// Create and position the grid sprites
-		scrollingGrids = new Array<FlxSprite>();
-		for (i in 0...numScrollingGridsY)
-		{
-			for (j in 0...numScrollingGridsX)
-			{
-				var grid = new FlxSprite();
-				grid.loadGraphic(Util.image("LuigiGrid"), false, false);
-				grid.x = -gridWidth * j;
-				grid.y = -gridHeight * i;
-				grid.antialiasing = ClientPrefs.antialiasing;
-				grid.scrollFactor.set(0, 0);
-
-				// Add the grid to the display list and the scrollingGrids array
-				add(grid);
-				scrollingGrids.push(grid);
-			}
-		}
+		background = new Background();
+		add(background);
 
 		// adds a red background as a border behind the tiles
-		var bg = new FlxSprite(171, 171);
-		bg.makeGraphic(64 * 19, 64 * 19, 0xffff0000);
+		var box = new FlxSprite(171, 171);
+		box.makeGraphic(64 * 19, 64 * 19, 0xffff0000);
 		// position the background to be 5 pixels away from the outer tiles
-		bg.x = -31;
-		bg.y = -31;
-		add(bg);
+		box.x = -31;
+		box.y = -31;
+		add(box);
 
 		// create a grid of 18x18 tiles
 		// check if the land isnt already saved or not (to prevent overwriting the save file)
@@ -253,24 +204,6 @@ class ViewLandState extends FlxState
 				FlxG.sound.playMusic(Util.music("AtlasEarth"), 0.5);
 		 */
 
-		if (!ClientPrefs.reducedMotion) {
-			for (tile in scrollingGrids)
-			{
-				tile.x += scrollSpeed * elapsed;
-				tile.y += scrollSpeed * elapsed;
-
-				// If the tile has gone off the bottom or left of the screen, move it back to the top right
-				if (tile.y >= FlxG.height)
-				{
-					tile.y -= tile.height * numScrollingGridsY;
-				}
-				if (tile.x >= FlxG.width)
-				{
-					tile.x -= tile.width * numScrollingGridsX;
-				}
-			}
-		}
-
 		// check if the player clicks on a tile
 		// opens a sub menu where the player can choose to buy/sell a tile
 		// if its bought they can add a building to it
@@ -388,6 +321,10 @@ class ViewLandState extends FlxState
 		ClientPrefs.saveSettings();
 	} // buy land
 
+	/**
+	 * Easy access to the buyLand function
+	 * @param land Land to buy
+	 */
 	public static function buyLand(land:Land)
 	{
 		land.owned = true;
@@ -407,6 +344,9 @@ class ViewLandState extends FlxState
 			FlxG.sound.play(Util.sound("buy"), 0.5);
 	}
 
+	/**
+	 * Updates the red outline to the currently selected land
+	 */
 	function updateSelection()
 	{
 		selectedOutline.x = curSelectedLand.x * 64;

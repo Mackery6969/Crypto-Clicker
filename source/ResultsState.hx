@@ -5,10 +5,15 @@ class ResultsState extends FlxState
 	var resultsComingIn:FlxText;
 
 	var canInteract:Bool = false;
+	var introPlaying:Bool = true;
+	var slowlyShowingResults:Bool = false;
 	var playLoop:Bool = false;
 
 	var intro:FlxSound;
+	var drums:FlxSound;
 	var resultsLoop:FlxSound;
+
+	var resultsTimer:FlxTimer;
 
 	var results:FlxGroup;
 	var resultsTitle:FlxText;
@@ -61,7 +66,7 @@ class ResultsState extends FlxState
 				resultsComingIn.kill();
 				canInteract = true;
 
-				var drums = new FlxSound();
+				drums = new FlxSound();
 				drums.loadEmbedded(Util.music("results-final"));
 				if (!ClientPrefs.sound)
 					drums.volume = 0;
@@ -70,10 +75,13 @@ class ResultsState extends FlxState
 				drums.onComplete = function()
 				{
 					playLoop = true;
+					slowlyShowingResults = true;
 
 					// add the results text one by one
-					add(results);
+					//add(results);
 					bg.visible = true;
+
+					addResults();
 
 					resultsLoop = new FlxSound();
 					resultsLoop.loadEmbedded(Util.music("results-loop"));
@@ -85,6 +93,9 @@ class ResultsState extends FlxState
 		} else if (ClientPrefs.music) {
 			FlxG.sound.playMusic(Util.music("raldi/resultsComingIn"), 0.5, true);
 			FlxG.sound.music.play();
+			slowlyShowingResults = true;
+
+			addResults();
 
 			bg.visible = true;
 			resultsComingIn.kill();
@@ -223,6 +234,76 @@ class ResultsState extends FlxState
 				trace('reset save');
 				FlxG.switchState(new PlayState());
 			}
+		}
+		else if (slowlyShowingResults)
+		{
+			if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER)
+			{
+				skipIntro(true);
+			}
+		}
+		else if (introPlaying)
+		{
+			if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER)
+			{
+				skipIntro(false);
+			}
+		}
+	}
+
+	/**
+	 * Add the results text to the screen one by one
+	 */
+	function addResults()
+	{
+		// set everything in the results group to an array
+		var resultsArray = [totalMoneyGained, totalMoneyLost, totalMoneySpent, totalLandBought, totalBuildingsBought, totalClicks, finalMoneyCount, finalMoneyPerClickCount, finalMoneyPerSecondCount, runTime, pressEnter];
+		var resultsArrayIndex = 0;
+
+		// slowly add the results text to the screen one by one
+		resultsTimer.start(3.0, function (timer:FlxTimer)
+		{
+			add(resultsArray[resultsArrayIndex]);
+		}, 12);
+	}
+
+	/**
+	 * Skip the intro and go straight to the results
+	 * @param isLoadingResults Whether or not the results are loading in (if true, the results being added one by one is skipped)
+	 */
+	function skipIntro(?isLoadingResults:Bool = false)
+	{
+		resultsComingIn.kill();
+		canInteract = true;
+		introPlaying = false;
+		playLoop = true;
+		slowlyShowingResults = false;
+		if (intro != null && intro.playing)
+			intro.stop();
+		if (drums != null && drums.playing)
+			drums.stop();
+
+		if (isLoadingResults)
+		{
+			// add the results text one by one
+			resultsTimer.cancel();
+			add(results);
+
+			resultsLoop = new FlxSound();
+			resultsLoop.loadEmbedded(Util.music("results-loop"));
+			if (!ClientPrefs.sound)
+				resultsLoop.volume = 0;
+			resultsLoop.play();
+		}
+		else
+		{
+			add(results);
+
+			resultsLoop = new FlxSound();
+			resultsLoop.loadEmbedded(Util.music("results-loop"));
+			if (!ClientPrefs.sound)
+				resultsLoop.volume = 0;
+			resultsLoop.play();
 		}
 	}
 }

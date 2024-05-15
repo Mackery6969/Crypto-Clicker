@@ -1,7 +1,10 @@
 import ClientPrefs;
 import PlayState;
 import ShowFPS;
+#if desktop
 import GJLogin;
+#end
+import Util;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;

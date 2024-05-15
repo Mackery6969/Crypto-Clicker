@@ -5,6 +5,7 @@ import ClientPrefs;
 import ShowFPS;
 import flixel.FlxGame;
 import openfl.display.Sprite;
+import openfl.Assets;
 
 class Main extends Sprite
 {
@@ -40,7 +41,8 @@ class Main extends Sprite
 		if (ClientPrefs.privateKey == "development-key")
 			ClientPrefs.privateKey = ""; // Clear the key if it's the dummy key to prevent misuse
 
-		//GJLogin.connect();
+		GJLogin.connect();
+		GJLogin.authDaUser(ClientPrefs.username, ClientPrefs.token);
 		#end
 
 		#if html5
@@ -53,6 +55,16 @@ class Main extends Sprite
 		#if discord_rpc
 		DiscordHandler.initialize();
 		#end
+
+		/*
+		// preload files
+		if (ClientPrefs.preload)
+		{
+			Assets.loadLibrary(Util.xml('images', 'images'));
+			Assets.loadLibrary(Util.xml('sounds', 'sounds'));
+			Assets.loadLibrary(Util.xml('music', 'music'));
+		}
+		*/
 
 		trace(PlayState.discordClient);
 
